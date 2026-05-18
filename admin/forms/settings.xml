@@ -1,0 +1,1813 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+    <fieldset name="globalparam2"
+            label="com_planjeagenda_GLOBAL_PARAMETERS"
+    >
+            <field name="access_level_locked_events" type="accesslevel"
+            label="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_EVENTS"
+            description="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_EVENTS_DESC"
+            class="inputbox form-select"
+            default="1"
+            multiple="true"
+        />
+        <field name="access_level_locked_venues" type="accesslevel"
+            label="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_VENUES"
+            description="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_VENUES_DESC"
+            class="inputbox form-select"
+            default="1"
+            multiple="true"
+        />
+        <field name="access_level_locked_categories" type="accesslevel"
+            label="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_CATEGORIES"
+            description="com_planjeagenda_SETTINGS_DISPLAY_LOCKED_CATEGORIES_DESC"
+            class="inputbox form-select"
+            default="1"
+            multiple="true"
+        />
+        <field name="categories_order" type="list"
+            label="com_planjeagenda_SETTINGS_CATEGORIES_ORDER"
+            description="com_planjeagenda_SETTINGS_CATEGORIES_ORDER_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_ID_ASC</option>
+            <option value="1">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_ID_DESC</option>
+            <option value="2">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_NAME_ASC</option>
+            <option value="3">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_NAME_DESC</option>
+        </field>
+        <field name="categories_order" type="list"
+            label="com_planjeagenda_SETTINGS_CATEGORIES_ORDER"
+            description="com_planjeagenda_SETTINGS_CATEGORIES_ORDER_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_ID_ASC</option>
+            <option value="1">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_ID_DESC</option>
+            <option value="2">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_NAME_ASC</option>
+            <option value="3">com_planjeagenda_SETTINGS_CATEGORIES_ORDER_NAME_DESC</option>
+        </field>
+        <field name="ical_max_items" type="text"
+            label="com_planjeagenda_SETTINGS_ICAL_MAX_ITEMS"
+            description="com_planjeagenda_SETTINGS_ICAL_MAX_ITEMS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="false"
+        />
+        <field name="display_num" type="list"
+            label="com_planjeagenda_EVENT_NUMBER"
+            description="com_planjeagenda_EVENT_NUMBER_DESC"
+            class="inputbox"
+            default="10"
+        >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="0">JAll</option>
+        </field>
+        <field name="discatheader" type="radio"
+            label="com_planjeagenda_SETTINGS_SHOW_CATEGORY_IMAGES"
+            description="com_planjeagenda_SETTINGS_SHOW_CATEGORY_IMAGES_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="ical_tz" type="list"
+            label="com_planjeagenda_SETTINGS_ICAL_TIMEZONE"
+            description="com_planjeagenda_SETTINGS_ICAL_TIMEZONE_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_SETTINGS_ICAL_TIMEZONE_FLOAT</option>
+            <option value="1">com_planjeagenda_SETTINGS_ICAL_TIMEZONE_JOOMLA</option>
+        </field>
+        <field name="weekdaystart" type="list"
+            label="com_planjeagenda_SETTINGS_SELECTFIRSTWEEKDAY"
+            description="com_planjeagenda_SETTINGS_SELECTFIRSTWEEKDAY_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_SETTINGS_SUNDAY</option>
+            <option value="1">com_planjeagenda_SETTINGS_MONDAY</option>
+        </field>
+        <field name="attachments_path" type="text"
+            label="com_planjeagenda_SETTINGS_ATTACHEMENT_PATH"
+            description="com_planjeagenda_SETTINGS_ATTACHEMENT_PATH_DESC"
+            class="inputbox"
+            size="40"
+            required="true"
+        />
+        <field name="attachments_types" type="text"
+            label="com_planjeagenda_SETTINGS_ATTACHEMENT_TYPES"
+            description="com_planjeagenda_SETTINGS_ATTACHEMENT_TYPES_DESC"
+            class="inputbox"
+            size="40"
+            required="true"
+        />
+        <field name="attachments_maxsize" type="text"
+            label="com_planjeagenda_SETTINGS_ATTACHEMENT_MAXSIZE"
+            description="com_planjeagenda_SETTINGS_ATTACHEMENT_MAXSIZE_DESC"
+            class="inputbox"
+            size="40"
+            required="true"
+        />
+        <field name="flagicons_path" type="text"
+            label="com_planjeagenda_SETTINGS_FLAG_ICONS_PATH"
+            description="com_planjeagenda_SETTINGS_FLAG_ICONS_PATH_DESC"
+            class="inputbox"
+            default="media/com_planjeagenda/images/flags/w80-webp/"
+            size="40"
+            required="true"
+        />
+        <field name="spacer2" type="spacer"
+            hr="true"
+        />
+        <field name="defaultCategory" type="catoptionsdefault"
+            label="com_planjeagenda_SETTINGS_SELECT_DEFAULT_CATEGORY"
+            description="com_planjeagenda_SETTINGS_SELECT_DEFAULT_CATEGORY_DESC"
+            class="inputbox form-select"
+            size="4"
+            default="0"
+        >
+            <option value="0">com_planjeagenda_SETTINGS_SELECT_CATEGORY_NONE</option>
+        </field>
+        <field name="defaultVenue" type="modal_venue"
+            label="com_planjeagenda_SETTINGS_SELECT_DEFAULT_VENUE"
+            description="com_planjeagenda_SETTINGS_SELECT_DEFAULT_VENUE_DESC"
+            size="40"
+            default="0"
+        />
+        <field name="defaultCountry" type="countryoptions"
+            label="com_planjeagenda_SETTINGS_SELECT_DEFAULT_COUNTRY"
+            description="com_planjeagenda_SETTINGS_SELECT_DEFAULT_COUNTRY_DESC"
+            default="0"
+        />
+        <field name="spacer3" type="spacer"
+            hr="true"
+        />
+        <field name="csv_separator" type="list"
+            label="com_planjeagenda_SETTINGS_CSV_SEPARATOR"
+            description="com_planjeagenda_SETTINGS_CSV_SEPARATOR_DESC"
+            class="inputbox"
+            default=";"
+            required="false"
+        >
+            <option value=",">com_planjeagenda_SETTINGS_CSV_SEPARATOR_COMMA</option>
+            <option value=";">com_planjeagenda_SETTINGS_CSV_SEPARATOR_SEMICOLON</option>
+            <option value="&#9;">com_planjeagenda_SETTINGS_CSV_SEPARATOR_TAB</option>
+        </field>
+        <field name="csv_delimiter" type="list"
+            label="com_planjeagenda_SETTINGS_CSV_DELIMITER"
+            description="com_planjeagenda_SETTINGS_CSV_DELIMITER_DESC"
+            class="inputbox"
+            default="&quot;"
+            required="false"
+        >
+            <option value="">com_planjeagenda_SETTINGS_CSV_DELIMITER_NONE</option>
+            <option value="&apos;">com_planjeagenda_SETTINGS_CSV_DELIMITER_QUOTE</option>
+            <option value="&quot;">com_planjeagenda_SETTINGS_CSV_DELIMITER_DQUOTE</option>
+        </field>
+        <field name="csv_bom" type="radio"
+            label="com_planjeagenda_SETTINGS_CSV_BOM"
+            description="com_planjeagenda_SETTINGS_CSV_BOM_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            size="1"
+            default="1"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+    </fieldset>
+
+
+    <fieldset name="globalparam_recurrence"
+              label="com_planjeagenda_GLOBAL_PARAMETERS_RECURRENCE"
+    >
+        <field name="recurrence_anticipation_day" type="text"
+            label="com_planjeagenda_SETTINGS_RECURRENCE_LIMITDAYS"
+            description="com_planjeagenda_SETTINGS_RECURRENCE_LIMITDAYS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="true"
+            default="3"
+        />
+        <field name="recurrence_anticipation_week" type="text"
+            label="com_planjeagenda_SETTINGS_RECURRENCE_LIMITWEEKS"
+            description="com_planjeagenda_SETTINGS_RECURRENCE_LIMITWEEKS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="true"
+            default="12"
+        />
+        <field name="recurrence_anticipation_month" type="text"
+            label="com_planjeagenda_SETTINGS_RECURRENCE_LIMITMONTHS"
+            description="com_planjeagenda_SETTINGS_RECURRENCE_LIMITMONTHS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="true"
+            default="60"
+        />
+        <field name="recurrence_anticipation_year" type="text"
+            label="com_planjeagenda_SETTINGS_RECURRENCE_LIMITYEARS"
+            description="com_planjeagenda_SETTINGS_RECURRENCE_LIMITYEARS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="true"
+            default="180"
+        />
+        <field name="recurrence_anticipation_lastday" type="text"
+            label="com_planjeagenda_SETTINGS_RECURRENCE_LIMITLASTDAYS"
+            description="com_planjeagenda_SETTINGS_RECURRENCE_LIMITLASTDAYS_DESC"
+            class="inputbox"
+            size="3"
+            maxlength="3"
+            required="true"
+            default="60"
+        />
+    </fieldset>
+
+    <fieldset name="display"
+              label="com_planjeagenda_DISPLAY_SETTINGS"
+    >
+        <field name="showdetails" type="radio"
+            label="com_planjeagenda_SHOW_EVENT"
+            description="com_planjeagenda_SHOW_EVENT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            size="1"
+            default="1"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+
+        </field>
+        <field name="formatdate" type="text"
+            label="com_planjeagenda_SETTINGS_DATE_FORMAT"
+            description="com_planjeagenda_SETTINGS_DATE_FORMAT_DESC"
+            class="inputbox"
+            size="20"
+            required="false"
+        />
+        <field name="formatShortDate" type="text"
+            label="com_planjeagenda_SETTINGS_SHORT_DATE_FORMAT"
+            description="com_planjeagenda_SETTINGS_SHORT_DATE_FORMAT_DESC"
+            class="inputbox"
+            size="20"
+            required="false"
+        />
+        <field name="formattime" type="text"
+            label="com_planjeagenda_TIME_FORMAT"
+            description="com_planjeagenda_TIME_FORMAT_DESC"
+            class="inputbox"
+            size="20"
+            required="false"
+        />
+        <field name="formathour" type="text"
+            label="com_planjeagenda_HOUR_FORMAT"
+            description="com_planjeagenda_HOUR_FORMAT_DESC"
+            class="inputbox"
+            size="20"
+            required="false"
+        />
+        <field name="timename" type="text"
+            label="com_planjeagenda_TIME_NAME"
+            description="com_planjeagenda_TIME_NAME_DESC"
+            class="inputbox"
+            size="15"
+            maxlength="10"
+            required="false"
+        />
+        <field name="storeip" type="radio"
+            label="com_planjeagenda_STORE_IP"
+            description="com_planjeagenda_STORE_IP_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="displaylayout" label="com_planjeagenda_LAYOUT_STYLE_SETTINGS">
+        <field name="layoutstyle" type="list"
+            label="com_planjeagenda_SHOW_LAYOUT_STYLE"
+            description="com_planjeagenda_SHOW_LAYOUT_STYLE_DESC"
+            class="inputbox"
+            size="1"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_SHOW_LAYOUT_STYLE_LEGACY</option>
+            <option value="1">com_planjeagenda_SHOW_LAYOUT_STYLE_RESPONSIVE</option>
+        </field>
+        <field name="useiconfont" type="radio"
+            label="com_planjeagenda_INCLUDE_ICON_FONT"
+            description="com_planjeagenda_INCLUDE_ICON_FONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="usercontrol"
+              label="com_planjeagenda_USER_CONTROL"
+    >
+        <field name="datdesclimit" type="text"
+            label="com_planjeagenda_DESCRIPTION_LIMIT"
+            description="com_planjeagenda_DESCRIPTION_LIMIT_DESC"
+            class="inputbox"
+            size="5"
+            required="false"
+        />
+        <field name="imageenabled" type="list"
+            label="com_planjeagenda_IMAGE_UPLOAD_OPTIONS"
+            description="com_planjeagenda_IMAGE_UPLOAD_OPTIONS_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_DISABLED</option>
+            <option value="1">com_planjeagenda_OPTIONAL</option>
+            <option value="2">com_planjeagenda_REQUIRED</option>
+        </field>
+        <field name="attachmentenabled" type="radio"
+            label="com_planjeagenda_ATTACHMENT_UPLOAD_OPTIONS"
+            description="com_planjeagenda_ATTACHMENT_UPLOAD_OPTIONS_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="usercontrolregistration"
+              label="com_planjeagenda_REGISTRATION"
+    >
+        <field name="showfroregistra" type="list"
+            label="com_planjeagenda_SUBMIT_REGISTER"
+            description="com_planjeagenda_SUBMIT_REGISTER_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+            <option value="2">com_planjeagenda_USE_EVENT_SETTING</option>
+        </field>
+        <!--field name="showfrounregistra" type="list"
+            label="com_planjeagenda_SUBMIT_UNREGISTER"
+            description="com_planjeagenda_SUBMIT_UNREGISTER_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+            <option value="2">com_planjeagenda_OPTIONAL</option>
+        </field-->
+        <field name="regallowinvitation" type="radio"
+            label="com_planjeagenda_ALLOW_INVITATION"
+            description="com_planjeagenda_ALLOW_INVITATION_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="regallowcomments" type="radio"
+            label="com_planjeagenda_ALLOW_REGISTER_COMMENTS"
+            description="com_planjeagenda_ALLOW_REGISTER_COMMENTS_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="evimagehandling"
+              label="com_planjeagenda_IMAGE_HANDLING"
+    >
+        <field name="image_filetypes" type="text"
+            label="com_planjeagenda_IMAGE_FILETYPES"
+            description="com_planjeagenda_IMAGE_FILETYPES_DESC"
+            class="inputbox"
+            size="40"
+            default="jpg,gif,png,webp"
+            required="false"
+        />
+        <field name="sizelimit" type="text"
+            label="com_planjeagenda_IMAGE_FILESIZE"
+            description="com_planjeagenda_IMAGE_FILESIZE_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <!-- @todo rename field -->
+        <field name="imagehight" type="text"
+            label="com_planjeagenda_IMAGE_HEIGHT"
+            description="com_planjeagenda_IMAGE_HEIGHT_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <field name="imagewidth" type="text"
+            label="com_planjeagenda_IMAGE_WIDTH"
+            description="com_planjeagenda_IMAGE_WIDTH_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <field name="gddisabled" type="radio"
+            label="com_planjeagenda_GD_LIBRARY"
+            description="com_planjeagenda_GD_LIBRARY_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="gdversion" type="text"
+            label="com_planjeagenda_GD_VERSION"
+            description="com_planjeagenda_GD_VERSION_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        />
+        <field name="lightbox" type="radio"
+            label="com_planjeagenda_IMAGE_LIGHTBOX"
+            description="com_planjeagenda_IMAGE_LIGHTBOX_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="flyer" type="radio"
+            label="com_planjeagenda_IMAGE_FLYER"
+            description="com_planjeagenda_IMAGE_FLYER_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="meta_description" type="textarea"
+            label="com_planjeagenda_META_DESCRIPTION"
+            description="com_planjeagenda_META_DESCRIPTION_DESC"
+            rows="3" cols="35"
+            class="inputbox"
+        />
+    </fieldset>
+
+    <fieldset name="eveventhandling"
+              label="com_planjeagenda_EVENT_HANDLING"
+    >
+        <field name="oldevent" type="list"
+            label="com_planjeagenda_OLD_EVENTS"
+            description="com_planjeagenda_OLD_EVENTS_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">com_planjeagenda_DO_NOTHING</option>
+            <option value="2">com_planjeagenda_ARCHIVE_OLD_EVENTS</option>
+            <option value="3">com_planjeagenda_TRASH_OLD_EVENTS</option>
+            <option value="1">com_planjeagenda_DELETE_OLD_EVENTS</option>
+        </field>
+        <field name="minus" type="text"
+            label="com_planjeagenda_NUMBER_DELETE_DAYS"
+            description="com_planjeagenda_NUMBER_DELETE_DAYS_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="layoutgenerallayoutsetting"
+              label="com_planjeagenda_GENERAL_LAYOUT_SETTINGS"
+    >
+        <field name="tablewidth" type="text"
+            label="com_planjeagenda_FRONT_TABLE_WIDTH"
+            description="com_planjeagenda_FRONT_TABLE_WIDTH_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+
+    </fieldset>
+
+    <fieldset name="layoutdatecolumn"
+              label="com_planjeagenda_DATE_COLUMN"
+    >
+        <field name="datewidth" type="text"
+            label="com_planjeagenda_WIDTH_DATE_COLUMN"
+            description="com_planjeagenda_WIDTH_DATE_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <field name="showtime" type="radio"
+            label="com_planjeagenda_SETTINGS_FIELD_SHOW_TIME_IN_LISTS"
+            description="com_planjeagenda_SETTINGS_FIELD_SHOW_TIME_IN_LISTS_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="datemode" type="list"
+            label="com_planjeagenda_DATE_COLUMN_LAYOUT"
+            description="com_planjeagenda_DATE_COLUMN_LAYOUT_DESC"
+            class="inputbox"
+            default="1"
+            required="false"
+        >
+            <option value="1">com_planjeagenda_DATE_COLUMN_LAYOUT_ONE_LINE</option>
+            <option value="2">com_planjeagenda_DATE_COLUMN_LAYOUT_TWO_LINES</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="layoutcitycolumn"
+              label="com_planjeagenda_CITY_COLUMN"
+    >
+        <field name="showcity" type="radio"
+            label="com_planjeagenda_DISPLAY_CITY_FRONT"
+            description="com_planjeagenda_DISPLAY_CITY_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="citywidth" type="text"
+            label="com_planjeagenda_WIDTH_CITY_COLUMN"
+            description="com_planjeagenda_WIDTH_CITY_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="layoutattendeecolumn"
+              label="com_planjeagenda_ATTENDEE_COLUMN"
+    >
+        <field name="showatte" type="radio"
+            label="com_planjeagenda_DISPLAY_ATTENDEE_FRONT"
+            description="com_planjeagenda_DISPLAY_ATTENDEE_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="attewidth" type="text"
+            label="com_planjeagenda_WIDTH_ATTENDEE_COLUMN"
+            description="com_planjeagenda_WIDTH_ATTENDEE_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="layouttitlecolumn"
+              label="com_planjeagenda_TITLE_COLUMN"
+    >
+        <field name="showtitle" type="radio"
+            label="com_planjeagenda_DISPLAY_TITLE_FRONT"
+            description="com_planjeagenda_DISPLAY_TITLE_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="titlewidth" type="text"
+            label="com_planjeagenda_WIDTH_TITLE_COLUMN"
+            description="com_planjeagenda_WIDTH_TITLE_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="layoutvenuecolumn"
+              label="com_planjeagenda_VENUE_COLUMN"
+    >
+        <field name="showlocate" type="radio"
+            label="com_planjeagenda_DISPLAY_VENUE_FRONT"
+            description="com_planjeagenda_DISPLAY_VENUE_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="locationwidth" type="text"
+            label="com_planjeagenda_WIDTH_VENUE_COLUMN"
+            description="com_planjeagenda_WIDTH_VENUE_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <field name="showlinkvenue" type="radio"
+            label="com_planjeagenda_DISPLAY_LINK_TO_VENUE_VIEW"
+            description="com_planjeagenda_DISPLAY_LINK_TO_VENUE_VIEW_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="layoutstatecolumn"
+              label="com_planjeagenda_STATE_COLUMN"
+    >
+        <field name="showstate" type="radio"
+            label="com_planjeagenda_DISPLAY_STATE_FRONT"
+            description="com_planjeagenda_DISPLAY_STATE_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="statewidth" type="text"
+            label="com_planjeagenda_WIDTH_STATE_COLUMN"
+            description="com_planjeagenda_WIDTH_STATE_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="layoutcategorycolumn"
+              label="com_planjeagenda_CATEGORY_COLUMN"
+    >
+        <field name="showcat" type="radio"
+            label="com_planjeagenda_DISPLAY_CATEGORY_FRONT"
+            description="com_planjeagenda_DISPLAY_CATEGORY_FRONT_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="catfrowidth" type="text"
+            label="com_planjeagenda_WIDTH_CATEGORY_COLUMN"
+            description="com_planjeagenda_WIDTH_CATEGORY_COLUMN_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+        <field name="catlinklist" type="radio"
+            label="com_planjeagenda_DISPLAY_LINK_TO_CATEGORY_VIEW"
+            description="com_planjeagenda_DISPLAY_LINK_TO_CATEGORY_VIEW_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="layoutshowimage"
+              label="com_planjeagenda_LAYOUT_TABLE_EVENTIMAGE"
+    >
+        <field name="showeventimage" type="radio"
+            label="com_planjeagenda_LAYOUT_DISPLAY_EVENTIMAGE"
+            description="com_planjeagenda_LAYOUT_DISPLAY_EVENTIMAGE_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="tableeventimagewidth" type="text"
+            label="com_planjeagenda_LAYOUT_TABLE_EVENTIMAGE_WIDTH"
+            description="com_planjeagenda_LAYOUT_TABLE_EVENTIMAGE_WIDTH_DESC"
+            class="inputbox"
+            size="10"
+            maxlength="10"
+            required="false"
+        />
+    </fieldset>
+
+    <fieldset name="usercontrolacevent"
+              label="com_planjeagenda_AC_EVENTS"
+    >
+        <field name="delivereventsyes" type="list"
+            label="com_planjeagenda_AC_EVENT_SUBMIT"
+            description="com_planjeagenda_AC_EVENT_SUBMIT_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="autopubl" type="list"
+            label="com_planjeagenda_AUTOPUBLISH"
+            description="com_planjeagenda_AUTOPUBLISH_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="eventedit" type="list"
+            label="com_planjeagenda_AC_EVENT_EDIT"
+            description="com_planjeagenda_AC_EVENT_EDIT_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="eventowner" type="radio"
+            label="com_planjeagenda_EDIT_EVENT_FRONTEND_USER"
+            description="com_planjeagenda_EDIT_EVENT_FRONTEND_USER_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="usercontrolacvenue"
+              label="com_planjeagenda_AC_VENUES"
+    >
+        <field name="deliverlocsyes" type="list"
+            label="com_planjeagenda_AC_VENUE_SUBMIT"
+            description="com_planjeagenda_AC_VENUE_SUBMIT_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="autopublocate" type="list"
+            label="com_planjeagenda_AUTOPUBLISH_VENUE"
+            description="com_planjeagenda_AUTOPUBLISH_VENUE_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="venueedit" type="list"
+            label="com_planjeagenda_AC_VENUE_EDIT"
+            description="com_planjeagenda_AC_VENUE_EDIT_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="-2">com_planjeagenda_ONLYADMINS</option>
+            <option value="-1">com_planjeagenda_ALLREGISTERED</option>
+        </field>
+        <field name="venueowner" type="radio"
+            label="com_planjeagenda_EDIT_VENUE_FRONTEND_USER"
+            description="com_planjeagenda_EDIT_VENUE_FRONTEND_USER_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fields name="globalattribs">
+        <fieldset name="basic"
+                  label="com_planjeagenda_EVENT_ATTRIBS_FIELDSET_LABEL"
+        >
+            <field name="event_show_venue_name" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_VENUE_NAME_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_VENUE_NAME_LABEL_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_category" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_CATEGORY_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_CATEGORY_LABEL_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_link_category" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_LINK_CATEGORY_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_CATEGORY_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+                showon="event_show_category:1"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_author" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_AUTHOR_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_AUTHOR_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_link_author" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_LINK_AUTHOR_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_AUTHOR_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_contact" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_CONTACT_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_CONTACT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_link_contact" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_LINK_CONTACT_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_CONTACT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_hits" type="radio"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_HITS_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_HITS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_print_icon" type="radio"
+                label="JGLOBAL_SHOW_PRINT_ICON_LABEL"
+                description="JGLOBAL_SHOW_PRINT_ICON_LABEL_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_email_icon" type="radio"
+                label="JGLOBAL_SHOW_EMAIL_ICON_LABEL"
+                description="JGLOBAL_SHOW_EMAIL_ICON_LABEL_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_ical_icon" type="radio"
+                label="com_planjeagenda_SETTINGS_EVENT_FIELD_SHOW_ICAL_ICON"
+                description="com_planjeagenda_SETTINGS_EVENT_FIELD_SHOW_ICAL_ICON_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_readmore" type="radio"
+                label="JGLOBAL_SHOW_READMORE_LABEL"
+                description="JGLOBAL_SHOW_READMORE_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_intro" type="radio"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_INTRO_DESC"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_INTRO_LABEL"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="globalparam"
+                  label="com_planjeagenda_GLOBAL_PARAMETERS"
+        >
+            <field name="global_show_filter" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_FILTER"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_FILTER_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_display" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_LIMITBOX"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_LIMITBOX_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_icons" type="radio"
+                label="com_planjeagenda_SHOW_ICONS"
+                description="com_planjeagenda_SHOW_ICONS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_print_icon" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_PRINT_ICON"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_PRINT_ICON_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_archive_icon" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_ARCHIVE_ICON"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_ARCHIVE_ICON_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_email_icon" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_EMAIL_ICON"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_EMAIL_ICON_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_ical_icon" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_ICAL_ICON"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_ICAL_ICON_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_timedetails" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_SHOW_TIME"
+                description="com_planjeagenda_SETTINGS_FIELD_SHOW_TIME_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="spacer1" type="spacer"
+                hr="true"
+            />
+            <field name="global_regname" type="list"
+                label="com_planjeagenda_SETTINGS_FIELD_REGNAME"
+                description="com_planjeagenda_SETTINGS_FIELD_REGNAME_DESC"
+                class="inputbox"
+                default="1"
+                required="false"
+            >
+                <option value="1">com_planjeagenda_NAME</option>
+                <option value="0">com_planjeagenda_USERNAME</option>
+            </field>
+            <field name="highlight" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_ENABLE_HIGHLIGHT"
+                description="com_planjeagenda_SETTINGS_FIELD_ENABLE_HIGHLIGHT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="default_Itemid" type="text"
+                label="com_planjeagenda_SETTINGS_FIELD_DEFAULTITEMID"
+                description="com_planjeagenda_SETTINGS_FIELD_DEFAULTITEMID_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+            />
+            <field name="loglevel" type="list"
+                label="com_planjeagenda_SETTINGS_FIELD_LOGLEVEL"
+                description="com_planjeagenda_SETTINGS_FIELD_LOGLEVEL_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_LOGLEVEL_OFF</option>
+                <option value="1">com_planjeagenda_LOGLEVEL_ERROR</option>
+                <option value="2">com_planjeagenda_LOGLEVEL_WARNING</option>
+                <option value="3">com_planjeagenda_LOGLEVEL_INFO</option>
+                <option value="4">com_planjeagenda_LOGLEVEL_DEBUG</option>
+                <option value="5">com_planjeagenda_LOGLEVEL_ALL</option>
+            </field>
+            <field name="global_googleapi" type="text"
+                label="com_planjeagenda_SETTINGS_FIELD_GOOGLEAPIKEY"
+                description="com_planjeagenda_SETTINGS_FIELD_GOOGLEAPIKEY_DESC"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field name="global_googleclientid" type="text"
+                label="com_planjeagenda_SETTINGS_FIELD_GOOGLECLIENTID"
+                description="com_planjeagenda_SETTINGS_FIELD_GOOGLECLIENTID_DESC"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field name="spacer2" type="spacer"
+                hr="true"
+            />
+            <field name="global_cleanup_db_on_uninstall" type="radio"
+                label="com_planjeagenda_SETTINGS_FIELD_CLEANUP_DB_ON_UNINSTALL"
+                description="com_planjeagenda_SETTINGS_FIELD_CLEANUP_DB_ON_UNINSTALL_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="venues"
+                  label="com_planjeagenda_VENUES"
+        >
+            <field name="global_show_detailsadress" type="radio"
+                label="com_planjeagenda_DISPLAY_ADDRESS"
+                description="com_planjeagenda_DISPLAY_ADDRESS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="global_show_locdescription" type="radio"
+                label="com_planjeagenda_DISPLAY_VENUE_DESCRIPT"
+                description="com_planjeagenda_DISPLAY_VENUE_DESCRIPT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="global_show_detlinkvenue" type="radio"
+                label="com_planjeagenda_DISPLAY_LINK_TO_VENUE"
+                description="com_planjeagenda_DISPLAY_LINK_TO_VENUE_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+
+            </field>
+            <field name="global_show_listevents" type="radio"
+                label="com_planjeagenda_DISPLAY_LIST_EVENTS"
+                description="com_planjeagenda_DISPLAY_LIST_EVENTS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="global_show_mapserv" type="list"
+                label="com_planjeagenda_DISPLAY_LINK_TO_MAP"
+                description="com_planjeagenda_DISPLAY_LINK_TO_MAP_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_NO_MAP_SERVICE</option>
+                <option value="1">com_planjeagenda_GOOGLE_MAP_LINK</option>
+                <option value="2">com_planjeagenda_GOOGLE_MAP_DISP</option>
+                <option value="3">com_planjeagenda_GOOGLE_MAP_DISP_API</option>
+                <option value="4">com_planjeagenda_OSM_MAP_LINK</option>
+                <option value="5">com_planjeagenda_OSM_MAP_DISP</option>
+            </field>
+            <field name="global_tld" type="text"
+                label="com_planjeagenda_GOOGLE_MAP_TLD"
+                description="com_planjeagenda_GOOGLE_MAP_TLD_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="global_show_mapserv:1,2,3"
+            />
+            <field name="global_lg" type="text"
+                label="com_planjeagenda_GOOGLE_MAP_LG"
+                description="com_planjeagenda_GOOGLE_MAP_LG_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="global_show_mapserv:1,2,3"
+            />
+        </fieldset>
+
+        <fieldset name="evevents"
+                  label="com_planjeagenda_EVENTS"
+        >
+            <field name="event_show_detailstitle" type="radio"
+                label="com_planjeagenda_DISPLAY_EVENT_TITLE"
+                description="com_planjeagenda_DISPLAY_EVENT_TITLE_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_description" type="radio"
+                label="com_planjeagenda_DISPLAY_EVENT_DESCRIPT"
+                description="com_planjeagenda_DISPLAY_EVENT_DESCRIPT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_date_in_title" type="radio"
+                   class="btn-group btn-group-yesno"
+                   default="0"
+                   label="com_planjeagenda_SETTINGS_SHOW_DATE_BROWSER_TITLE"
+                   description="com_planjeagenda_SETTINGS_SHOW_DATE_BROWSER_TITLE_DESC"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="evvenues"
+                  label="com_planjeagenda_VENUES"
+        >
+            <field name="event_show_venue" type="radio"
+                label="com_planjeagenda_EVENT_DISPLAY_VENUE"
+                description="com_planjeagenda_EVENT_DISPLAY_VENUE_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="event_show_detailsadress" type="radio"
+                label="com_planjeagenda_EVENT_DISPLAY_ADDRESS"
+                description="com_planjeagenda_EVENT_DISPLAY_ADDRESS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="event_show_locdescription" type="radio"
+                label="com_planjeagenda_EVENT_DISPLAY_VENUE_DESCRIPT"
+                description="com_planjeagenda_EVENT_DISPLAY_VENUE_DESCRIPT_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="event_show_detlinkvenue" type="list"
+                label="com_planjeagenda_EVENT_DISPLAY_LINK_TO_VENUE"
+                description="com_planjeagenda_EVENT_DISPLAY_LINK_TO_VENUE_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_NO_LINK</option>
+                <option value="1">com_planjeagenda_LINK_TO_URL</option>
+                <option value="2">com_planjeagenda_LINK_TO_VENUEVIEW</option>
+            </field>
+            <field name="event_show_mapserv" type="list"
+                label="com_planjeagenda_EVENT_DISPLAY_LINK_TO_MAP"
+                description="com_planjeagenda_EVENT_DISPLAY_LINK_TO_MAP_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_NO_MAP_SERVICE</option>
+                <option value="1">com_planjeagenda_GOOGLE_MAP_LINK</option>
+                <option value="2">com_planjeagenda_GOOGLE_MAP_DISP</option>
+                <option value="3">com_planjeagenda_GOOGLE_MAP_DISP_API</option>
+                <option value="4">com_planjeagenda_OSM_MAP_LINK</option>
+                <option value="5">com_planjeagenda_OSM_MAP_DISP</option>
+            </field>
+            <field name="event_tld" type="text"
+                label="com_planjeagenda_EVENT_GOOGLE_MAP_TLD"
+                description="com_planjeagenda_EVENT_GOOGLE_MAP_TLD_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="event_show_mapserv:1,2,3"
+            />
+            <field name="event_lg" type="text"
+                label="com_planjeagenda_EVENT_GOOGLE_MAP_LG"
+                description="com_planjeagenda_EVENT_GOOGLE_MAP_LG_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="event_show_mapserv:1,2,3"
+            />
+        </fieldset>
+
+        <fieldset name="evregistration"
+                  label="com_planjeagenda_REGISTRATION"
+        >
+            <field name="event_show_registration" type="radio"
+                label="com_planjeagenda_EVENT_DISPLAY_REGISTRATION"
+                description="com_planjeagenda_EVENT_DISPLAY_REGISTRATION_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_registration_counters" type="radio"
+                label="com_planjeagenda_EVENT_DISPLAY_REGISTRATION_COUNTERS"
+                description="com_planjeagenda_EVENT_DISPLAY_REGISTRATION_COUNTERS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="1"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_more_attendeedetails" type="radio"
+                label="com_planjeagenda_REG_SHOW_MORE_ATTENDEEDETAILS"
+                description="com_planjeagenda_REG_SHOW_MORE_ATTENDEEDETAILS_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+                required="false"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="event_show_attendeenames" type="list"
+                label="com_planjeagenda_REG_SHOW_ATTENDEENAMES_TO"
+                description="com_planjeagenda_REG_SHOW_ATTENDEENAMES_TO_DESC"
+                class="inputbox"
+                default="2"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_NOBODY</option>
+                <option value="1">com_planjeagenda_ONLYADMINS</option>
+                <option value="2">com_planjeagenda_ALLATTENDING</option>
+                <option value="4">com_planjeagenda_ONLYUSER</option>
+                <option value="3">com_planjeagenda_EVERYBODY</option>
+            </field>
+            <field name="event_show_attendeenames_order" type="list"
+                label="com_planjeagenda_REG_SHOW_ATTENDEENAMES_ORDER"
+                description="com_planjeagenda_REG_SHOW_ATTENDEENAMES_ORDER_DESC"
+                class="inputbox"
+                default="8"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_ORDER_REGISTRATION_ASC</option>
+                <option value="1">com_planjeagenda_ORDER_REGISTRATION_DESC</option>
+                <option value="2">com_planjeagenda_ORDER_USERID_ASC</option>
+                <option value="3">com_planjeagenda_ORDER_USERID_DESC</option>
+                <option value="4">com_planjeagenda_ORDER_USERNAME_ASC</option>
+                <option value="5">com_planjeagenda_ORDER_USERNAME_DESC</option>
+                <option value="6">com_planjeagenda_ORDER_NAME_ASC</option>
+                <option value="7">com_planjeagenda_ORDER_NAME_DESC</option>
+                <option value="8">com_planjeagenda_ORDER_STATUS_ASC</option>
+                <option value="9">com_planjeagenda_ORDER_STATUS_DESC</option>
+            </field>
+            <field name="event_comunsolution" type="list"
+                label="com_planjeagenda_COM_SOL"
+                description="com_planjeagenda_COM_SOL_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_DONT_USE_COM_SOL</option>
+                <option value="1">com_planjeagenda_COMBUILDER</option>
+            </field>
+            <field name="event_comunoption" type="list"
+                label="com_planjeagenda_TYPE_COM_INTEGRATION"
+                description="com_planjeagenda_TYPE_COM_INTEGRATION_DESC"
+                class="inputbox"
+                default="0"
+                required="false"
+            >
+                <option value="0">com_planjeagenda_LINK_PROFILE</option>
+                <option value="1">com_planjeagenda_LINK_AVATAR</option>
+            </field>
+        </fieldset>
+
+        <field name="global_show_ownedvenuesonly" type="radio"
+            label="com_planjeagenda_SETTINGS_FIELD_SHOW_OWNEDVENUESONLY"
+            description="com_planjeagenda_SETTINGS_FIELD_SHOW_OWNEDVENUESONLY_DESC"
+            class="inputbox btn-group btn-group-yesno"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="global_editevent_starttime_limit" type="list"
+            label="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_STARTTIMELIMIT"
+            description="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_STARTTIMELIMIT_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+        </field>
+        <field name="global_editevent_endtime_limit" type="list"
+            label="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_ENDTIMELIMIT"
+            description="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_ENDTIMELIMIT_DESC"
+            class="inputbox"
+            default="23"
+            required="false"
+        >
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+        </field>
+        <field name="global_editevent_minutes_block" type="list"
+            label="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_MINUTESBLOCK"
+            description="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_MINUTESBLOCK_DESC"
+            class="inputbox"
+            default="5"
+            required="false"
+        >
+            <option value="1"> 1</option>
+            <option value="2"> 2</option>
+            <option value="3"> 3</option>
+            <option value="4"> 4</option>
+            <option value="5"> 5</option>
+            <option value="6"> 6</option>
+            <option value="10">10</option>
+            <option value="12">12</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+        </field>
+        <field name="global_editevent_maxnumcustomfields" type="list"
+            label="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_MAXNUMCUSTOMFIELDS"
+            description="com_planjeagenda_SETTINGS_FIELD_EDITEVENT_MAXNUMCUSTOMFIELDS_DESC"
+            class="inputbox"
+            default="-1"
+            required="false"
+        >
+            <option value="-1">JALL</option>
+            <option value="0"> JNONE</option>
+            <option value="1"> 1</option>
+            <option value="2"> 2</option>
+            <option value="3"> 3</option>
+            <option value="4"> 4</option>
+            <option value="5"> 5</option>
+            <option value="6"> 6</option>
+            <option value="7"> 7</option>
+            <option value="8"> 8</option>
+            <option value="9"> 9</option>
+        </field>
+        <field name="global_editvenue_maxnumcustomfields" type="list"
+            label="com_planjeagenda_SETTINGS_FIELD_EDITVENUE_MAXNUMCUSTOMFIELDS"
+            description="com_planjeagenda_SETTINGS_FIELD_EDITVENUE_MAXNUMCUSTOMFIELDS_DESC"
+            class="inputbox"
+            default="-1"
+            required="false"
+        >
+            <option value="-1">JALL</option>
+            <option value="0"> JNONE</option>
+            <option value="1"> 1</option>
+            <option value="2"> 2</option>
+            <option value="3"> 3</option>
+            <option value="4"> 4</option>
+            <option value="5"> 5</option>
+            <option value="6"> 6</option>
+            <option value="7"> 7</option>
+            <option value="8"> 8</option>
+            <option value="9"> 9</option>
+        </field>
+    </fields>
+
+    <fields name="css">
+        <fieldset name="stylesheet" label="Stylesheet">
+            <field name="css_backend_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_BACKEND_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_BACKEND_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_backend_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_BACKEND_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_BACKEND_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer1" hr="true" />
+            <field name="css_calendar_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_CALENDAR_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_CALENDAR_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_calendar_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_CALENDAR_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_CALENDAR_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer2" hr="true" />
+            <field name="css_colorpicker_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_COLORPICKER_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_COLORPICKER_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_colorpicker_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_COLORPICKER_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_COLORPICKER_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer3" hr="true" />
+            <field name="css_geostyle_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_GEOSTYLE_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_GEOSTYLE_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_geostyle_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_GEOSTYLE_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_GEOSTYLE_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer4" hr="true" />
+            <field name="css_googlemap_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_GOOGLEMAP_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_GOOGLEMAP_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_googlemap_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_GOOGLEMAP_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_GOOGLEMAP_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer5" hr="true" />
+            <field name="css_jem_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_JEM_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_JEM_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_jem_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_JEM_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_JEM_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+            <field type="spacer" name="spacer6" hr="true" />
+            <field name="css_print_usecustom" type="radio"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_PRINT_USECUSTOM_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_PRINT_USECUSTOM"
+                class="inputbox btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="css_print_customfile" type="text"
+                description="com_planjeagenda_SETTINGS_FIELD_CSS_PRINT_CUSTOMFILE_DESC"
+                label="com_planjeagenda_SETTINGS_FIELD_CSS_PRINT_CUSTOMFILE"
+                class="inputbox"
+                size="50"
+                required="false"
+            />
+        </fieldset>
+        <fieldset name="css_color">
+            <field
+                    name="css_color_bg_filter"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_FILTER"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_FILTER_DESC" />
+            <field
+                    name="css_color_bg_h2"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_H2"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_H2_DESC" />
+            <field
+                    name="css_color_bg_jem"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_JEM"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_JEM_DESC" />
+            <field
+                    name="css_color_bg_table_th"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TH"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TH_DESC" />
+            <field
+                    name="css_color_bg_table_td"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TD"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TD_DESC" />
+            <field
+                    name="css_color_bg_table_tr_entry2"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_ENTRY2"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_ENTRY2_DESC" />
+            <field
+                    name="css_color_bg_table_tr_hover"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_HOVER"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_HOVER_DESC" />
+            <field
+                    name="css_color_bg_table_tr_featured"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_FEATURED"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BG_TABLE_TR_FEATURED_DESC" />
+        </fieldset>
+        <fieldset name="css_color_border">
+            <field
+                    name="css_color_border_filter"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_FILTER"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_FILTER_DESC" />
+            <field
+                    name="css_color_border_h2"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_H2"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_H2_DESC" />
+            <field
+                    name="css_color_border_table_th"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_TABLE_TH"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_TABLE_TH_DESC" />
+            <field
+                    name="css_color_border_table_td"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_TABLE_TD"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_BORDER_TABLE_TD_DESC" />
+        </fieldset>
+        <fieldset name="css_color_font">
+            <field
+                    name="css_color_font_h2"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_H2"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_H2_DESC" />
+            <field
+                    name="css_color_font_table_th"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TH"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TH_DESC" />
+            <field
+                    name="css_color_font_table_td"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TD"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TD_DESC" />
+            <field
+                    name="css_color_font_table_td_a"
+                    type="color"
+                    default=""
+                    size="8"
+                    class="form-control"
+                    label="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TD_A"
+                    description="com_planjeagenda_SETTINGS_FIELD_CSS_COLOR_FONT_TABLE_TD_A_DESC" />
+        </fieldset>
+    </fields>
+        <fieldset name="debug" label="com_planjeagenda_SETTINGS_DEBUG_LABEL">
+            <field name="debug_enabled" type="radio"
+                label="com_planjeagenda_SETTINGS_DEBUG_ENABLED"
+                description="com_planjeagenda_SETTINGS_DEBUG_ENABLED_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="debug_logpath" type="text"
+                label="com_planjeagenda_SETTINGS_DEBUG_LOGPATH"
+                description="com_planjeagenda_SETTINGS_DEBUG_LOGPATH_DESC"
+                default="tmp/klevents_debug.txt"
+                size="60"
+            />
+        </fieldset>
+
+</form>

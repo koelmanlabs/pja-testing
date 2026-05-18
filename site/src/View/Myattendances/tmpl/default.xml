@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_MYATTENDANCES_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_MYATTENDANCES_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="filtermyregs" type="radio"
+                default="1"
+                label="com_planjeagenda_FILTER_MYREGISTRATIONS"
+                description="com_planjeagenda_FILTER_MYREGISTRATIONS_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="myregspast" type="text"
+                size="4"
+                default="1"
+                label="com_planjeagenda_MYREGSPAST"
+                description="com_planjeagenda_MYREGSPAST_DESC"
+            />
+        </fieldset>
+    </fields>
+</metadata>

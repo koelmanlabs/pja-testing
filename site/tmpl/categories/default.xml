@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_CATEGORIES_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_CATEGORIES_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <fields name="request">
+        <fieldset name="request"
+            addfieldpath="/administrator/components/com_planjeagenda/models/fields"
+        >
+            <field name="id" type="categories"
+                default="1"
+                label="com_planjeagenda_SELECTTOPCAT"
+                description="com_planjeagenda_SELECTTOPCATDESC"
+                required="false"
+            />
+        </fieldset>
+    </fields>
+
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="showemptycats" type="radio"
+                default="1"
+                label="com_planjeagenda_SHOWEMPTYCATS"
+                description="com_planjeagenda_SHOWEMPTYCATSDESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="cat_num" type="text"
+                size="2"
+                default="4"
+                label="com_planjeagenda_CAT_DISPLAY"
+                description="com_planjeagenda_CAT_DISPLAY_DESC"
+            />
+            <field name="detcat_nr" type="text"
+                size="1"
+                default="3"
+                label="com_planjeagenda_DET_CATEGORIES_PREVIEW"
+                description="com_planjeagenda_DET_CATEGORIES_PREVIEW_DESC"
+            />
+            <field name="usecat" type="radio"
+                default="1"
+                label="com_planjeagenda_DISPLAYCHILDS"
+                description="com_planjeagenda_DISPLAYCHILDSDESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="showemptychilds" type="radio"
+                default="1"
+                label="com_planjeagenda_SHOWEMPTYCHILD"
+                description="com_planjeagenda_SHOWEMPTYCHILDDESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

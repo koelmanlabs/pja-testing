@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fieldset name="details">
+        <field name="status" type="list"
+            label="com_planjeagenda_STATUS"
+            description="com_planjeagenda_STATUS_DESC"
+            class="inputbox"
+            filter="intval"
+            size="1"
+            default="1"
+        >
+            <option value="0">com_planjeagenda_ATTENDEES_INVITED</option>
+            <option value="-1">com_planjeagenda_ATTENDEES_NOT_ATTENDING</option>
+            <option value="1">com_planjeagenda_ATTENDEES_ATTENDING</option>
+            <option value="2">com_planjeagenda_ATTENDEES_ON_WAITINGLIST</option>
+        </field>
+    </fieldset>
+</form>

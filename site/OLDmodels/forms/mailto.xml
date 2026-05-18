@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<form>
+    <fieldset name="details">
+        <field
+                name="emailto"
+                type="email"
+                label="com_planjeagenda_MAILTO_EMAIL_TO"
+                filter="string"
+                required="true"
+                size="30"
+                validate="email"
+                autocomplete="email"
+        />
+
+        <field
+                name="sender"
+                type="text"
+                label="com_planjeagenda_MAILTO_SENDER"
+                filter="string"
+                required="true"
+                size="30"
+        />
+
+        <field
+                name="emailfrom"
+                type="email"
+                label="com_planjeagenda_MAILTO_YOUR_EMAIL"
+                filter="string"
+                required="true"
+                size="30"
+                validate="email"
+                autocomplete="email"
+        />
+
+        <field
+                name="subject"
+                type="text"
+                label="com_planjeagenda_MAILTO_SUBJECT"
+                filter="string"
+                required="true"
+                size="30"
+        />
+
+        <field
+                name="captcha"
+                type="captcha"
+                label="com_planjeagenda_MAILTO_CAPTCHA"
+                validate="captcha"
+        />
+    </fieldset>
+</form>

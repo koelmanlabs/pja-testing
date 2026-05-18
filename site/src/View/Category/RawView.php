@@ -1,0 +1,57 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+
+/**
+ * Raw: Category
+ */
+class PlanjeagendaViewCategory extends HtmlView
+{
+    /**
+     * Creates the output for the Category view
+     */
+    public function display($tpl = null)
+    {
+        $settings  = PlanjeagendaHelper::config();
+        $settings2 = PlanjeagendaHelper::globalattribs();
+        $app       = Factory::getApplication();
+        $jinput    = $app->input;
+
+        $year  = (int)$jinput->getInt('yearID', date("Y"));
+        $month = (int)$jinput->getInt('monthID', date("m"));
+        $catid = (int)$jinput->getInt('id', 0);
+
+        if ($settings2->get('global_show_ical_icon','0')==1) {
+            // Get data from the model
+            $model = $this->getModel('CategoryCal');
+            $model->setState('list.start',0);
+            $model->setState('list.limit',$settings->ical_max_items);
+            $model->setDate(mktime(0, 0, 1, $month, 1, $year));
+
+            $rows = $model->getItems();
+
+            // initiate new CALENDAR
+            $category = $model->getCategories($catid);
+            $vcal = PlanjeagendaHelper::getCalendarTool();
+            $vcal->setConfig("filename", "events_category_" . $category[0]->id . "_". $year . str_pad($month, 2, '0', STR_PAD_LEFT) . ".ics");
+
+            if (!empty($rows)) {
+                foreach ($rows as $row) {
+                    PlanjeagendaHelper::icalAddEvent($vcal, $row);
+                }
+            }
+
+            // generate and redirect output to user browser
+            $vcal->send();
+        }
+    }
+}

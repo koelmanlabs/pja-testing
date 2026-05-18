@@ -1,0 +1,33 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('JPATH_BASE') or die;
+
+use Joomla\CMS\Form\FormField;
+
+/**
+ * CountryOptions Field class.
+ *
+ *
+ */
+class JFormFieldStarttime extends FormField
+{
+    /**
+     * The form field type.
+     *
+     */
+    protected $type = 'Starttime';
+
+    public function getInput()
+    {
+        $starthours = PlanjeagendaHelper::buildtimeselect(23, 'starthours', substr( $this->value, 0, 2 ),array('class'=>'form-select valid form-control-success'));
+        $startminutes = PlanjeagendaHelper::buildtimeselect(59, 'startminutes', substr($this->value, 3, 2 ),array('class'=>'form-select valid form-control-success'));
+        $var2 = $starthours.$startminutes;
+        return $var2;
+    }
+}

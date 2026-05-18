@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_EVENT_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_EVENT_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <fields name="request">
+        <fieldset name="request"
+            addfieldprefix="KoelmanLabs\Component\Planjeagenda\Administrator\Field"
+            addfieldpath="/administrator/components/com_planjeagenda/models/fields"
+        >
+            <field name="id" type="Event"
+                label="com_planjeagenda_SELECT_EVENT"
+                description="com_planjeagenda_SELECT_EVENT_DESC"
+                required="true"
+            />
+        </fieldset>
+    </fields>
+
+    <fields name="params">
+    </fields>
+</metadata>

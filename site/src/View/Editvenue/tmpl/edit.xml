@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_EDITVENUE_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_EDITVENUE_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="introtext" type="editor"
+                   filter="safehtml"
+                   hide="readmore,pagebreak,module,menu,fields,contact,article"
+                   default=""
+                   rows="8"
+                   cols="30"
+                   height="300px"
+                   label="com_planjeagenda_INTROTEXT_FIELD"
+                   description="com_planjeagenda_INTROTEXT_FIELD_DESC"
+            />
+            <field name="showintrotext"
+                   type="radio"
+                   default="0"
+                   label="com_planjeagenda_DISPLAY_INTROTEXT"
+                   description="com_planjeagenda_DISPLAY_INTROTEXT_DESC"
+                   class="btn-group btn-group-yesno"
+            >
+                <option value="1">com_planjeagenda_SHOW</option>
+                <option value="0">com_planjeagenda_HIDE</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

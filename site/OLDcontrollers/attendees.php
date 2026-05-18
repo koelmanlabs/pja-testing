@@ -1,0 +1,370 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Log\Log;
+
+/**
+ * JEM Component Attendees Controller
+ *
+ * @package JEM
+ *
+ */
+class PlanjeagendaControllerAttendees extends BaseController
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * redirect to events page
+     */
+    public function back()
+    {
+        $this->setRedirect(Route::_(PlanjeagendaHelperRoute::getMyEventsRoute(), false));
+        $this->redirect();
+    }
+
+    /**
+     * addtask
+     */
+    public function attendeeadd()
+    {
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $app     = Factory::getApplication();
+        $input  = $app->getInput();
+        $eventid = $input->getInt('id', 0);
+        $status  = $input->getInt('status', 0);
+        $checkseries  = $input->getString('series', '');
+        $comment = '';
+        $fid     = $input->getInt('Itemid', 0);
+        $uids    = explode(',', $input->getString('uids', ''));
+        \Joomla\Utilities\ArrayHelper::toInteger($uids);
+        $uids    = array_filter($uids);
+        $uids    = array_unique($uids);
+
+        // Security: non-admins may only register/unregister themselves.
+        $currentUser = \Joomla\CMS\Factory::getApplication()->getIdentity();
+        if (!$currentUser->authorise('core.manage', 'com_planjeagenda')) {
+            $myId = (int)$currentUser->get('id');
+            $uids = array_filter($uids, function($uid) use ($myId) { return (int)$uid === $myId; });
+        }
+
+        // Security: non-admins may only register/unregister themselves.
+        $currentUser = \Joomla\CMS\Factory::getApplication()->getIdentity();
+        if (!$currentUser->authorise('core.manage', 'com_planjeagenda')) {
+            $myId = (int)$currentUser->get('id');
+            $uids = array_filter($uids, function($uid) use ($myId) { return (int)$uid === $myId; });
+        }
+        $total   = is_array($uids) ? count($uids) : 0;
+        $msg     = '';
+
+        if ($input->get('task', 0,'string')=="attendeeadd") {
+            $places = $input->getInt('places', 0);
+        } else {
+            if ($status == 1)
+            {
+                $places = $input->getInt('addplaces', 0);
+            }
+            else
+            {
+                $places = $input->getInt('cancelplaces', 0);
+            }
+        }
+
+        if($checkseries == "on"){
+            $checkseries = 1;
+        }else{
+            $checkseries = 0;
+        }
+
+        PlanjeagendaHelper::addLogEntry("Got attendee add - event: {$eventid}, status: {$status}, users: " . implode(',', $uids), __METHOD__, Log::DEBUG);
+
+        if ($total < 1) {
+            $msg = '0 ' . Text::_('com_planjeagenda_REGISTERED_USERS_ADDED');
+        } else {
+            PluginHelper::importPlugin('planjeagenda');
+            $dispatcher = \Joomla\CMS\Factory::getApplication();
+
+            // We have to check all users first if there are already records for given event.
+            // If not we have to add the records and than on success send the emails.
+            $modelEventItem = $this->getModel('event');
+            $modelAttendees = $this->getModel('attendees'); // required to ensure PlanjeagendaModelAttendees is loaded
+            $regs = PlanjeagendaModelAttendees::getRegisteredUsers($eventid);
+            $errMsgs = array();
+            $errMsg  = '';
+            $skip    = 0;
+            $error   = 0;
+            $changed = 0;
+
+            // Get event
+            try {
+                $event = $modelEventItem->getItem($eventId);
+            }
+            catch (Exception $e) {
+                $event = false;
+            }
+
+            // If event has 'seriesbooking' active and $series is true then get all recurrence events of series from now (register or unregister)
+            if($event->recurrence_type){
+                if(($event->seriesbooking && $checkseries)) {
+                    $events = $modelEventItem->getListRecurrenceEventsbyId($eventid, $event->recurrence_first_id, time());
+                }
+            }
+
+            if (!isset($events) || !count ($events)){
+                $events [] = clone $event;
+            }
+
+            foreach ($events as $key => $row) {
+
+                $skip = $error = $changed = 0;
+
+                foreach ($uids as $uid) {
+                    if (array_key_exists($uid, $regs)) {
+                        $reg = $regs[$uid];
+                        $old_status = ($reg->status == 1 && $reg->waiting == 1) ? 2 : $reg->status;
+                        if (!empty($reg->id) && ($old_status != $status)) {
+                            PlanjeagendaHelper::addLogEntry("Change user {$uid} already registered for event {$row->id}.", __METHOD__, Log::DEBUG);
+                            $reg_id = $modelEventItem->adduser($row->id, $uid, $status, $places, $comment, $errMsg, $reg->id);
+                            if ($reg_id) {
+                                $res = \Joomla\CMS\Factory::getApplication()->triggerEvent('onEventUserRegistered', array($reg_id));
+                                ++$changed;
+                            } else {
+                                PlanjeagendaHelper::addLogEntry(implode(' - ', array("Model returned error while changing registration of user {$uid}", $errMsg)), __METHOD__, Log::DEBUG);
+                                if (!empty($errMsg)) {
+                                    $errMsgs[] = $errMsg;
+                                }
+                                ++$error;
+                            }
+                        } else {
+                            PlanjeagendaHelper::addLogEntry("Skip user {$uid} already registered for event {$row->id}.", __METHOD__, Log::DEBUG);
+                            ++$skip;
+                        }
+                    } else {
+                        $reg_id = $modelEventItem->adduser($row->id, $uid, $status, $places, $comment, $errMsg);
+                        if ($reg_id) {
+                            $res = \Joomla\CMS\Factory::getApplication()->triggerEvent('onEventUserRegistered', array($reg_id));
+                        } else {
+                            PlanjeagendaHelper::addLogEntry(implode(' - ', array("Model returned error while adding user {$uid}", $errMsg)), __METHOD__, Log::DEBUG);
+                            if (!empty($errMsg)) {
+                                $errMsgs[] = $errMsg;
+                            }
+                            ++$error;
+                        }
+                    }
+                }
+
+                \Joomla\CMS\Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)->createCacheController('callback', ['defaultgroup' => 'com_planjeagenda'])->clean();
+
+                $msg = ($total - $skip - $error - $changed) . ' ' . Text::_('com_planjeagenda_REGISTERED_USERS_ADDED') . ' [ID: ' . $row->id . ']';
+                if ($changed > 0) {
+                    $msg .= ', ' . $changed . ' ' . Text::_('com_planjeagenda_REGISTERED_USERS_CHANGED');
+                }
+                $errMsgs = array_unique($errMsgs);
+
+                if (count($errMsgs)) {
+                    $msg .= '<br>' . implode('<br>', $errMsgs);
+                }
+            }
+        }
+        $this->setRedirect(Route::_('index.php?option=com_planjeagenda&view=attendees&id='.$eventid.'&Itemid='.$fid, false), $msg);
+    }
+
+    /**
+     * removetask
+     */
+    public function attendeeremove()
+    {
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $input = Factory::getApplication()->input;
+        $cid    = $input->get('cid', array(), 'array');
+        $id     = $input->getInt('id', 0);
+        $fid    = $input->getInt('Itemid', 0);
+        $total  = is_array($cid) ? count($cid) : 0;
+
+        if ($total < 1) {
+            throw new Exception(Text::_('com_planjeagenda_SELECT_ITEM_TO_DELETE'), 500);
+        }
+
+        $modelAttendeeList = $this->getModel('attendees');
+
+        PluginHelper::importPlugin('planjeagenda');
+        $dispatcher = \Joomla\CMS\Factory::getApplication();
+
+        $modelAttendeeItem = $this->getModel('attendee');
+
+        // We need information about every entry to delete for mailer.
+        // But we should first delete the entry and than on success send the mails.
+        foreach ($cid as $reg_id) {
+            $modelAttendeeItem->setId($reg_id);
+            $entry = $modelAttendeeItem->getData();
+            if($modelAttendeeList->remove(array($reg_id))) {
+                $res = \Joomla\CMS\Factory::getApplication()->triggerEvent('onEventUserUnregistered', array($entry->event, $entry));
+            } else {
+                $error = true;
+            }
+        }
+        if (!empty($error)) {
+            echo "<script> alert('".$modelAttendeeList->getError()."'); window.history.go(-1); </script>\n";
+        }
+
+        \Joomla\CMS\Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)->createCacheController('callback', ['defaultgroup' => 'com_planjeagenda'])->clean();
+
+        $msg = $total.' '.Text::_('com_planjeagenda_REGISTERED_USERS_DELETED');
+
+        $this->setRedirect(Route::_('index.php?option=com_planjeagenda&view=attendees&id='.$id.'&Itemid='.$fid, false), $msg);
+    }
+
+    ///@todo Add function to change registration status.
+
+    /**
+     * toggletask
+     */
+    public function attendeetoggle()
+    {
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $input = Factory::getApplication()->input;
+        $id     = $input->getInt('id', 0);
+        $fid    = $input->getInt('Itemid', 0);
+
+        $model = $this->getModel('attendee');
+        $model->setId($id);
+
+        $attendee = $model->getData();
+        $res = $model->toggle();
+
+        $type = 'message';
+
+        if ($res)
+        {
+            PluginHelper::importPlugin('planjeagenda');
+            $dispatcher = \Joomla\CMS\Factory::getApplication();
+            $res = \Joomla\CMS\Factory::getApplication()->triggerEvent('onUserOnOffWaitinglist', array($id));
+
+            if ($attendee->waiting) {
+                $msg = Text::_('com_planjeagenda_ADDED_TO_ATTENDING');
+            } else {
+                $msg = Text::_('com_planjeagenda_ADDED_TO_WAITING');
+            }
+        }
+        else
+        {
+            $msg = Text::_('com_planjeagenda_WAITINGLIST_TOGGLE_ERROR').': '.$model->getError();
+            $type = 'error';
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_planjeagenda&view=attendees&id='.$attendee->event.'&Itemid='.$fid, false), $msg, $type);
+        $this->redirect();
+    }
+
+    /**
+     * Exporttask
+     * view: attendees
+     */
+    public function export()
+    {
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $app       = Factory::getApplication();
+        $params    = ($app->isClient('administrator') ? \Joomla\CMS\Component\ComponentHelper::getParams('com_planjeagenda') : $app->getParams());
+        $jemconfig = PlanjeagendaConfig::getInstance()->toRegistry();
+
+        $enableemailaddress = $params->get('enableemailaddress', 0);
+        $separator         = $jemconfig->get('csv_separator', ';');
+        $delimiter         = $jemconfig->get('csv_delimiter', '"');
+        $csv_bom           = $jemconfig->get('csv_bom', '1');
+        $userfield         = $jemconfig->get('globalattribs.global_regname', 1) ? 'name' : 'username';
+        $comments          = $jemconfig->get('regallowcomments', 0);
+
+        $model = $this->getModel('attendees');
+        $datas = $model->getData();
+        $event = $model->getEvent();
+        $waitinglist = isset($event->waitinglist) ? $event->waitinglist : false;
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Content-Disposition: attachment; filename=attendees_event_' . $event->id . '.csv');
+        header('Pragma: no-cache');
+
+        $export = fopen('php://output', 'w');
+        ob_end_clean();
+        if ($csv_bom ==1 ) {
+            //add BOM to fix UTF-8 in Excel
+            fputs($export, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+        }
+
+        $cols = array();
+        $cols[] = Text::_('com_planjeagenda_NUM');
+        $cols[] = Text::_($jemconfig->get('globalattribs.global_regname', 1) ? 'com_planjeagenda_NAME' : 'com_planjeagenda_USERNAME');
+        if ($enableemailaddress == 1) {
+            $cols[] = Text::_('com_planjeagenda_EMAIL');
+        }
+        $cols[] = Text::_('com_planjeagenda_REGDATE');
+        $cols[] = Text::_('com_planjeagenda_STATUS');
+        $cols[] = Text::_('com_planjeagenda_PLACES');
+        if ($comments) {
+            $cols[] = Text::_('com_planjeagenda_COMMENT');
+        }
+
+        fputcsv($export, $cols, $separator, $delimiter);
+
+        $i = 0;
+        foreach ($datas as $data)
+        {
+            $cols = array();
+
+            $cols[] = ++$i;
+            $cols[] = $data->$userfield;
+            if ($enableemailaddress == 1) {
+                $cols[] = $data->email;
+            }
+            $cols[] = empty($data->uregdate) ? '' : HTMLHelper::_('date',$data->uregdate, Text::_('DATE_FORMAT_LC5'));
+
+            $status = isset($data->status) ? $data->status : 1;
+            if ($status < 0) {
+                $txt_stat = 'com_planjeagenda_ATTENDEES_NOT_ATTENDING';
+            } elseif ($status > 0) {
+                $txt_stat = $data->waiting ? 'com_planjeagenda_ATTENDEES_ON_WAITINGLIST' : 'com_planjeagenda_ATTENDEES_ATTENDING';
+            } else {
+                $txt_stat = 'com_planjeagenda_ATTENDEES_INVITED';
+            }
+            $cols[] = Text::_($txt_stat);
+            $cols[] = $data->places;
+            if ($comments) {
+                $comment = strip_tags($data->comment ?? '');
+                // comments are limited to 255 characters in db so we don't need to truncate them on export
+                $cols[] = $comment;
+            }
+
+            fputcsv($export, $cols, $separator, $delimiter);
+        }
+
+        fclose($export);
+        $app->close();
+    }
+}

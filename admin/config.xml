@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <inlinehelp button="show"/>
+    <fieldset
+        name="permissions"
+        label="JCONFIG_PERMISSIONS_LABEL"
+        description="JCONFIG_PERMISSIONS_DESC"
+    >
+        <field
+            name="rules"
+            type="rules"
+            label="JCONFIG_PERMISSIONS_LABEL"
+            class="inputbox"
+            validate="rules"
+            filter="rules"
+            component="com_planjeagenda"
+            section="component" />
+    </fieldset>
+    <fieldset name="debug" label="COM_PLANJEAGENDA_CONFIG_DEBUG_SETTINGS">
+    <field 
+        name="debug_logging" 
+        type="radio" 
+        default="0" 
+        label="COM_PLANJEAGENDA_CONFIG_DEBUG_LABEL" 
+        description="COM_PLANJEAGENDA_CONFIG_DEBUG_DESC"
+        class="btn-group btn-group-yesno">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+    </field>
+</fieldset>
+<fieldset name="component" label="COM_PLANJEAGENDA_FIELDSET_GENERAL">
+        <field 
+            name="google_maps_api_key" 
+            type="text" 
+            label="COM_PLANJEAGENDA_GOOGLE_MAPS_KEY_LABEL"
+            description="COM_PLANJEAGENDA_GOOGLE_MAPS_KEY_DESC"
+            size="40"
+        />
+        <field 
+    name="default_attachment_access" 
+    type="accesslevel" 
+    label="COM_PLANJEAGENDA_DEFAULT_ATTACHMENT_ACCESS_LABEL"
+    description="COM_PLANJEAGENDA_DEFAULT_ATTACHMENT_ACCESS_DESC"
+    default="1" 
+/>
+<field 
+    name="default_city" 
+    type="text" 
+    label="COM_PLANJEAGENDA_DEFAULT_CITY_LABEL" 
+    default="" 
+/>
+<field 
+    name="default_country" 
+    type="text" 
+    label="COM_PLANJEAGENDA_DEFAULT_COUNTRY_LABEL" 
+    default="Nederland" 
+/>
+    </fieldset>
+    <fieldset name="attachments" label="Bijlagen Instellingen">
+    <field 
+        name="image_max_width" 
+        type="number" 
+        default="1200" 
+        label="Maximale breedte (pixels)" 
+        description="Foto's worden in de browser verkleind naar deze breedte." />
+    
+    <field 
+        name="image_max_height" 
+        type="number" 
+        default="1200" 
+        label="Maximale hoogte (pixels)" />
+
+    <field 
+        name="image_quality" 
+        type="list" 
+        default="80" 
+        label="Upload Kwaliteit">
+        <option value="60">60% (Lager, sneller)</option>
+        <option value="70">70%</option>
+        <option value="80">80% (Aanbevolen)</option>
+        <option value="90">90% (Hoge kwaliteit)</option>
+        <option value="100">100% (Geen compressie)</option>
+    </field>
+    <field 
+    name="allowed_extensions" 
+    type="text" 
+    default="image/png, image/jpeg, image/webp" 
+    label="Toegestane MIME-types" 
+    description="Komma gescheiden lijst, bijv: image/png, image/jpeg" />
+</fieldset>
+</config>

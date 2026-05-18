@@ -1,0 +1,351 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+namespace KoelmanLabs\Component\Planjeagenda\Administrator\Model;
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Factory;
+use Joomla\Archive\Archive;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
+
+class SampledataModel extends BaseDatabaseModel
+{
+
+    /**
+     * Sample data directory
+     *
+     * @var string
+     */
+    private $sampleDataDir = null;
+
+    /**
+     * Files data array
+     *
+     * @var array
+     */
+    private $filelist = array();
+
+    /**
+     * Constructor
+     */
+    public function __construct($config = [], $factory = null)
+    {
+        parent::__construct();
+
+        if ($this->checkForJemData()) {
+            return false;
+        }
+
+        $this->sampleDataDir = JPATH_ADMINISTRATOR . '/components/com_planjeagenda' . '/assets/';
+        $this->filelist = $this->unpack();
+    }
+
+    /**
+     * Process sampledata
+     *
+     * @return boolean True on success
+     */
+    public function loadData()
+    {
+        if ($this->checkForJemData()) {
+            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_SAMPLEDATA_DATA_ALREADY_INSTALLED'), 'warning');
+            return false;
+        }
+
+        $scriptfile = $this->sampleDataDir . 'sampledata.sql';
+        // load sql file
+        if (!($buffer = file_get_contents($scriptfile))) {
+            return false;
+        }
+
+        // extract queries out of sql file
+        $queries = $this->splitSql($buffer);
+
+        // Process queries
+        foreach ($queries as $query) {
+            $query = trim($query);
+            if ($query != '' && $query[0] != '#') {
+                $this->_db->setQuery($query);
+                $this->_db->execute();
+            }
+        }
+
+        // assign admin userid to created_events
+        $this->assignAdminId();
+
+        // move images in proper directory
+        $this->moveImages();
+
+        // delete temporary extraction folder
+        if (!$this->deleteTmpFolder()) {
+            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_SAMPLEDATA_UNABLE_TO_DELETE_TMP_FOLDER'), 'warning');
+        }
+
+        return true;
+    }
+
+    /**
+     * Unpack archive and build array of files
+     *
+     * @return boolean|array
+     */
+    private function unpack()
+    {
+        $archive = $this->sampleDataDir . 'sampledata.zip';
+
+        // Temporary folder to extract the archive into
+        $tmpdir = uniqid('sample_');
+
+        // Clean the paths to use for archive extraction
+        $extractdir = Path::clean(JPATH_ROOT . '/tmp/' . $tmpdir);
+        $archive = Path::clean($archive);
+
+        // extract archive
+
+        try {
+            $archiveObj = new Archive(array('tmp_path' => Factory::getApplication()->get('tmp_path')));
+            $result = $archiveObj->extract($archive, $extractdir);
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_SAMPLEDATA_UNABLE_TO_EXTRACT_ARCHIVE'), 'warning');
+            return false;
+        }
+
+        if ($result === false) {
+            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_SAMPLEDATA_UNABLE_TO_EXTRACT_ARCHIVE'), 'warning');
+            return false;
+        }
+
+        // return the files found in the extract folder and also folder name
+        $files = array();
+
+        if ($handle = opendir($extractdir)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    $files[] = $file;
+                    continue;
+                }
+            }
+            closedir($handle);
+        }
+        $filelist['files'] = $files;
+        $filelist['folder'] = $extractdir;
+
+        return $filelist;
+    }
+
+    /**
+     * Split sql to single queries
+     *
+     * @return array
+     */
+    private function splitSql($sql)
+    {
+        $sql = trim($sql);
+        $sql = preg_replace("/\n\#[^\n]*/", '', "\n" . $sql);
+        $buffer = array();
+        $ret = array();
+        $in_string = false;
+
+        for ($i = 0; $i < strlen($sql) - 1; $i++) {
+            if ($sql[$i] == ";" && !$in_string) {
+                $ret[] = substr($sql, 0, $i);
+                $sql = substr($sql, $i + 1);
+                $i = 0;
+            }
+
+            if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+                $in_string = false;
+            }
+            elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+                $in_string = $sql[$i];
+            }
+            if (isset($buffer[1])) {
+                $buffer[0] = $buffer[1];
+            }
+            $buffer[1] = $sql[$i];
+        }
+
+        if (!empty($sql)) {
+            $ret[] = $sql;
+        }
+        return ($ret);
+    }
+
+    /**
+     * Copy images into the venues/events folder
+     *
+     * @return boolean True on success
+     */
+    private function moveImages()
+    {
+        $imagebase = JPATH_ROOT . '/images/klevents';
+
+        foreach ($this->filelist['files'] as $file) {
+            $subDirectory = "/";
+            if (strpos($file, "event") !== false) {
+                $subDirectory .= "events/";
+            }
+            elseif (strpos($file, "venue") !== false) {
+                $subDirectory .= "venues/";
+            }
+            elseif (strpos($file, "category") !== false) {
+                $subDirectory .= "categories/";
+            }
+            else {
+                // Nothing matched. Skip this file
+                continue;
+            }
+            if (strpos($file, "thumb") !== false) {
+                $subDirectory .= "small/";
+            }
+
+            // Use native PHP copy function instead of File::copy
+            copy($this->filelist['folder'] . '/' . $file, $imagebase . $subDirectory . $file);
+        }
+        return true;
+    }
+
+    /**
+     * Delete temporary folder
+     *
+     * @return boolean True on success
+     */
+    private function deleteTmpFolder()
+    {
+        if ($this->filelist['folder']) {
+            // Use native PHP function to recursively delete directory
+            if (!$this->removeDirectory($this->filelist['folder'])) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Recursively remove directory using native PHP functions
+     *
+     * @param string $dir Directory path
+     * @return boolean True on success
+     */
+    private function removeDirectory($dir)
+    {
+        if (!is_dir($dir)) {
+            return false;
+        }
+
+        $files = array_diff(scandir($dir), array('.', '..'));
+        
+        foreach ($files as $file) {
+            $path = $dir . '/' . $file;
+            if (is_dir($path)) {
+                $this->removeDirectory($path);
+            } else {
+                unlink($path);
+            }
+        }
+        return rmdir($dir);
+    }
+
+    /**
+     * Checks if JEM data already exists
+     *
+     * @return boolean True if data exists
+     */
+    private function checkForJemData()
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        $query->select("id, catname");
+        $query->from('#__pja_categories');
+        $query->where('alias NOT LIKE "root"');
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+
+        if ($result == null) {
+            return false;
+        }
+
+        // Detect if JEM is installed by default (only Uncategorised category without events)
+        if(count($result) == 1 && $result[0]->catname == 'Uncategorised') {
+            // Check if category has any events
+            $query = $db->getQuery(true);
+            $query->select("id");
+            $query->from('#__pja_cats_event_relations');
+            $query->where('catid=' . $db->quote($result[0]->id));
+            $db->setQuery($query);
+            $events = $db->loadObjectList();
+
+            if(empty($events)){
+                //Delete Uncategorised category before load demo data
+                $query = $db->getQuery(true);
+                $query->delete('#__pja_categories');
+                $query->where('catname=' . $db->quote($result[0]->catname));
+                $db->setQuery($query);
+                $db->execute();
+
+                return false;
+            }
+
+            return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Assign admin-id to created events
+     *
+     * @return boolean True if data exists
+     */
+    private function assignAdminId()
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('id'));
+        $query->from($db->quoteName('#__users'));
+        $query->where($db->quoteName('name') . ' = ' . $db->quote('Super User'));
+        $query->where($db->quoteName('block') . ' = 0');
+        $query->setLimit(1);
+        $db->setQuery($query);
+        $result = $db->loadResult();
+
+        if ($result == null) {
+            // use current user as fallback if user is allowed to manage JEM
+            $user = Factory::getApplication()->getIdentity();
+            if ($user->authorise('core.manage', 'com_planjeagenda')) {
+                $result = $user->id;
+            }
+            if (empty($result)) {
+                return false;
+            }
+        }
+
+        $query = $db->getQuery(true);
+        $query->update('#__pja_events');
+        $query->set('created_by = '.$db->quote((int)$result));
+        $query->where(array('created_by = 62'));
+        $db->setQuery($query);
+        $db->execute();
+
+        $query = $db->getQuery(true);
+        $query->update('#__pja_venues');
+        $query->set('created_by = '.$db->quote((int)$result));
+        $query->where(array('created_by = 62'));
+        $db->setQuery($query);
+        $db->execute();
+
+        return true;
+    }
+}

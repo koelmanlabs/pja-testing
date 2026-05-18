@@ -1,0 +1,525 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
+/**
+ * JEM Component Controller
+ *
+ * @package JEM
+ *
+ */
+class PlanjeagendaController extends BaseController
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        
+        parent::__construct();
+    }
+
+    /**
+     * Display the view
+     */
+    public function display($cachable = false, $urlparams = false)
+    {
+        PlanjeagendaDebug::log('SITE controller display()', \Joomla\CMS\Factory::getApplication()->input->getCmd('view', ''));
+        $app        = Factory::getApplication();
+        $document   = $app->getDocument();
+        $user       = \Joomla\CMS\Factory::getApplication()->getIdentity();
+        $input      = $app->input;
+
+        // AJAX Request for Load More
+        if ($input->get('format') === 'json' && $input->server->get('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest') {
+            $this->loadMore();
+            return;
+        }
+
+        // Set the default view name and format from the Request.
+        $jinput     = $app->input;
+        $id         = $jinput->getInt('a_id', 0);
+        $viewName   = $jinput->getCmd('view', 'eventslist');
+        $viewFormat = $document->getType();
+        $layoutName = $jinput->getCmd('layout', 'edit');
+
+        // Check for edit form.
+        if ($viewName == 'editevent' && !$this->checkEditId('com_planjeagenda.edit.event', $id)) {
+            // Somehow the person just went to the form - we don't allow that.
+            throw new Exception(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 403);
+        }
+
+        $view = $this->getView($viewName, $viewFormat);
+        if ($view) {
+            // Explicitly load site models that have naming conflicts with admin models
+            $siteModels = [
+                'category'   => JPATH_SITE . '/components/com_planjeagenda/models/category.php',
+                'categories' => JPATH_SITE . '/components/com_planjeagenda/models/categories.php',
+                'venue'      => JPATH_SITE . '/components/com_planjeagenda/models/venue.php',
+                'venues'     => JPATH_SITE . '/components/com_planjeagenda/models/venues.php',
+                'event'      => JPATH_SITE . '/components/com_planjeagenda/models/event.php',
+            ];
+            if (isset($siteModels[$viewName]) && file_exists($siteModels[$viewName])) {
+                require_once $siteModels[$viewName];
+            }
+
+            // Do any specific processing by view.
+            switch ($viewName) {
+                case 'attendees':
+                case 'calendar':
+                case 'categories':
+                case 'categoriesdetailed':
+                case 'category':
+                case 'day':
+                case 'editevent':
+                case 'editvenue':
+                case 'event':
+                case 'eventslist':
+                case 'myattendances':
+                case 'myevents':
+                case 'myvenues':
+                case 'search':
+                case 'venue':
+                case 'venues':
+                case 'venueslist':
+                case 'mailto':
+                case 'weekcal':
+                    $model = $this->getModel($viewName);
+                    break;
+                default:
+                    $model = $this->getModel('eventslist');
+                    break;
+            }
+
+            // Push the model into the view
+            if ($viewName == 'venue') {
+                $model1 = $this->getModel('Venue');
+                $model2 = $this->getModel('VenueCal');
+                $view->setModel($model1, true);
+                $view->setModel($model2);
+            } elseif($viewName == 'category') {
+                // Load site model explicitly - autoloader may not trigger via getModel()
+                if (!class_exists('PlanjeagendaModelCategory')) {
+                    require_once JPATH_SITE . '/components/com_planjeagenda/models/category.php';
+                }
+                if (!class_exists('PlanjeagendaModelCategoryCal')) {
+                    require_once JPATH_SITE . '/components/com_planjeagenda/models/categorycal.php';
+                }
+                $model1 = new \PlanjeagendaModelCategory();
+                $model2 = $this->getModel('CategoryCal');
+                $view->setModel($model1, true);
+                if ($model2) $view->setModel($model2);
+            } else {
+                // If getModel() returned false, try direct instantiation
+                if (!$model) {
+                    $className = 'PlanjeagendaModel' . ucfirst($viewName); // legacy site model naming
+                    if (class_exists($className)) {
+                        $model = new $className();
+                    }
+                }
+                if ($model) {
+                    $view->setModel($model, true);
+                }
+            }
+
+            $view->setLayout($layoutName);
+
+            // Push document object into the view.
+            $view->document = $document;
+
+            PlanjeagendaHelper::loadIconFont();
+
+            $view->display();
+        }
+    }
+
+    /**
+     * AJAX Load More functionality
+     */
+    private function loadMore()
+    {
+        PlanjeagendaDebug::log('loadMore', 'offset=' . \Joomla\CMS\Factory::getApplication()->input->getInt('offset', 0));
+        $app = Factory::getApplication();
+        $input = $app->input;
+
+        // CSRF protection - X-Requested-With alone is not sufficient
+        Session::checkToken('request') or die('Invalid Token');
+
+        $offset   = max(0, $input->getInt('offset', 0));
+        $limit    = min(50, max(1, $input->getInt('limit', 10))); // cap between 1 and 50
+        $viewName = $input->getCmd('view', 'eventslist');
+
+        // Whitelist allowed views for AJAX load-more
+        $allowedViews = ['eventslist', 'category', 'search', 'calendar', 'day', 'weekcal'];
+        if (!in_array($viewName, $allowedViews, true)) {
+            $viewName = 'eventslist';
+        }
+
+        // displayedMonths comes from the client - sanitize each entry
+        $rawMonths = $input->get('displayedMonths', [], 'array');
+        $displayedMonths = [];
+        foreach ((array)$rawMonths as $m) {
+            // Accept only strings matching "MonthName YYYY" pattern
+            $m = strip_tags((string)$m);
+            if (preg_match('/^[\p{L}\s]+\s+\d{4}$/u', trim($m))) {
+                $displayedMonths[] = trim($m);
+            }
+        }
+        
+        // Load model according to view
+        $model = $this->getModel($viewName);
+        if (!$model) {
+            $model = $this->getModel('eventslist');
+        }
+        
+        $result = $model->getEventsAjax($offset, $limit);
+        
+        if (!empty($result['items'])) {
+            // Render template for individual events - pass displayedMonths
+            $renderResult = $this->renderEventItems($result['items'], $displayedMonths);
+            
+            echo json_encode([
+                'html' => $renderResult['html'],
+                'hasMore' => $result['hasMore'],
+                'total' => $result['total'],
+                'displayedMonths' => $renderResult['displayedMonths'] // Return updated months to frontend
+            ]);
+        } else {
+            echo json_encode([
+                'html' => '',
+                'hasMore' => false,
+                'total' => 0,
+                'displayedMonths' => $displayedMonths
+            ]);
+        }
+        
+        $app->close();
+    }
+
+    /**
+     * Render Event Items for AJAX
+     */
+    private function renderEventItems($items, $displayedMonths = array())
+    {
+        ob_start();
+        
+        // Necessary Variables for Template
+        $app = Factory::getApplication();
+        $params = $app->getParams();
+        $jemsettings = PlanjeagendaHelper::config();
+        
+        // Parameters for Icons
+        $paramShowIconsOrder = $params->get('showiconsinorder', 1);
+        $showiconsineventtitle = $params->get('showiconsineventtitle', 1);
+        $showiconsineventdata = $params->get('showiconsineventdata', 1);
+        $paramShowMonthRow = $params->get('showmonthrow', '');
+        
+        // Safari Browser Detection
+        $isSafari = false;
+        if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') && !strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
+            $isSafari = true;
+        }
+        
+        $showMonthRow = false;
+        $uri = Uri::getInstance();
+        
+        foreach ($items as $row) : ?>
+            <?php
+            if ($paramShowMonthRow && $row->dates) {
+                // Get event date
+                $year = date('Y', strtotime($row->dates));
+                $month = date('F', strtotime($row->dates));
+                $YearMonth = Text::_('com_planjeagenda_'.strtoupper ($month)) . ' ' . $year;
+
+                // Check if this month was already displayed
+                if (!in_array($YearMonth, $displayedMonths)) {
+                    $showMonthRow = $YearMonth;
+                    $displayedMonths[] = $YearMonth; // Add to list
+                } else {
+                    $showMonthRow = false;
+                }
+
+                // Publish month row
+                if ($showMonthRow) { ?>
+                    <li class="klevents-event klevents-row klevents-justify-center bg-body-secondary" itemscope="itemscope"><span class="row-month"><?php echo $showMonthRow;?></span></li>
+                <?php }
+            } ?>
+            <?php if (!empty($row->featured)) : ?>
+                <li class="klevents-event klevents-row klevents-justify-start klevents-featured <?php echo $params->get('pageclass_sfx') . ' event_id' . htmlspecialchars($row->id); if (!empty($row->locid)) {  echo ' venue_id' . htmlspecialchars($row->locid); } ?>" itemscope="itemscope" itemtype="https://schema.org/Event" <?php if ($jemsettings->showdetails == 1 && (!$isSafari)) : echo 'onclick="location.href=\''.Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)) .'\'"'; endif; ?> >
+            <?php else : ?>
+                <li class="klevents-event klevents-row klevents-justify-start klevents-odd<?php echo ($row->odd + 1) . $params->get('pageclass_sfx') . ' event_id' . htmlspecialchars($row->id); if (!empty($row->locid)) {  echo ' venue_id' . htmlspecialchars($row->locid); } ?>" itemscope="itemscope" itemtype="https://schema.org/Event" <?php if (($jemsettings->showdetails == 1) && (!$isSafari) && ($jemsettings->gddisabled == 0)) : echo 'onclick="location.href=\''. Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)) .'\'"'; endif; ?>>
+            <?php endif; ?>
+
+            <?php if ($jemsettings->showeventimage == 1) : ?>
+                <div class="klevents-list-img">
+                    <?php if (!empty($row->datimage)) : ?>
+                        <?php
+                        $dimage = PlanjeagendaImage::flyercreator($row->datimage, 'event');
+                        echo PlanjeagendaOutput::flyer($row, $dimage, 'event');
+                        ?>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="klevents-event-details" <?php if (($jemsettings->showdetails == 1) && (!$isSafari) && ($jemsettings->gddisabled == 1)) : echo 'onclick="location.href=\''. Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)) .'\'"'; endif; ?>>
+                <?php if (($jemsettings->showtitle == 1) && ($jemsettings->showdetails == 1)) : // Display title as title of klevents-event with link ?>
+                    <h3 title="<?php echo Text::_('com_planjeagenda_TABLE_TITLE') . ': ' . htmlspecialchars($row->title); ?>">
+                        <a href="<?php echo Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)); ?>"><?php echo htmlspecialchars($row->title); ?></a>
+                        <?php echo ($showiconsineventtitle? PlanjeagendaOutput::recurrenceicon($row) :''); ?>
+                        <?php echo PlanjeagendaOutput::publishstateicon($row); ?>
+                        <?php if (!empty($row->featured)) : ?>
+                            <?php echo ($showiconsineventtitle? '<i class="klevents-featured-icon fa fa-exclamation-circle" aria-hidden="true"></i>':''); ?>
+                        <?php endif; ?>
+                    </h3>
+
+                <?php elseif (($jemsettings->showtitle == 1) && ($jemsettings->showdetails == 0)) : //Display title as title of klevents-event without link ?>
+                    <h4 title="<?php echo Text::_('com_planjeagenda_TABLE_TITLE') . ': ' . htmlspecialchars($row->title); ?>">
+                        <?php echo htmlspecialchars($row->title) . ($showiconsineventtitle? PlanjeagendaOutput::recurrenceicon($row) :'') . PlanjeagendaOutput::publishstateicon($row); ?>
+                        <?php if (!empty($row->featured)) : ?>
+                            <?php echo ($showiconsineventtitle? '<i class="klevents-featured-icon fa fa-exclamation-circle" aria-hidden="true"></i>':''); ?>
+                        <?php endif; ?>
+                    </h4>
+
+                <?php elseif (($jemsettings->showtitle == 0) && ($jemsettings->showdetails == 1)) : // Display date as title of klevents-event with link ?>
+                    <h4>
+                        <a href="<?php echo Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)); ?>">
+                            <?php
+                            echo PlanjeagendaOutput::formatShortDateTime($row->dates, $row->times, $row->enddates, $row->endtimes, $jemsettings->showtime);
+                            echo PlanjeagendaOutput::formatSchemaOrgDateTime($row->dates, $row->times, $row->enddates, $row->endtimes);
+                            ?>
+                        </a>
+                        <?php echo ($showiconsineventtitle? PlanjeagendaOutput::recurrenceicon($row) :''); ?>
+                        <?php echo PlanjeagendaOutput::publishstateicon($row); ?>
+                        <?php if (!empty($row->featured)) : ?>
+                            <?php echo ($showiconsineventtitle? '<i class="klevents-featured-icon fa fa-exclamation-circle" aria-hidden="true"></i>':''); ?>
+                        <?php endif; ?>
+                    </h4>
+
+                <?php else : // Display date as title of klevents-event without link ?>
+                    <h4>
+                        <?php
+                        echo PlanjeagendaOutput::formatShortDateTime($row->dates, $row->times,
+                            $row->enddates, $row->endtimes, $jemsettings->showtime);
+                        echo PlanjeagendaOutput::formatSchemaOrgDateTime($row->dates, $row->times,
+                            $row->enddates, $row->endtimes);
+                        ?>
+                        <?php echo ($showiconsineventtitle? PlanjeagendaOutput::recurrenceicon($row) :''); ?>
+                        <?php echo PlanjeagendaOutput::publishstateicon($row); ?>
+                        <?php if (!empty($row->featured)) : ?>
+                            <?php echo ($showiconsineventtitle? '<i class="klevents-featured-icon fa fa-exclamation-circle" aria-hidden="true"></i>':''); ?>
+                        <?php endif; ?>
+                    </h4>
+                <?php endif; ?>
+
+                <?php // Display other information below in a row ?>
+                <div class="klevents-list-row">
+                    <?php if ($jemsettings->showtitle == 1) : ?>
+                        <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_DATE').': '.strip_tags(PlanjeagendaOutput::formatShortDateTime($row->dates, $row->times, $row->enddates, $row->endtimes, $jemsettings->showtime)); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="far fa-clock" aria-hidden="true"></i>':''); ?>
+                            <?php
+                            echo PlanjeagendaOutput::formatShortDateTime($row->dates, $row->times, $row->enddates, $row->endtimes, $jemsettings->showtime);
+                            echo PlanjeagendaOutput::formatSchemaOrgDateTime($row->dates, $row->times, $row->enddates, $row->endtimes);
+                            ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showtitle == 0) : ?>
+                        <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_TITLE').': '.htmlspecialchars($row->title); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="fa fa-comment" aria-hidden="true"></i>':''); ?>
+                            <?php echo htmlspecialchars($row->title); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showlocate == 1 && !empty($row->locid)) : ?>
+                        <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_LOCATION') . ': ' . htmlspecialchars($row->venue); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="fa fa-map-marker" aria-hidden="true"></i>':''); ?>
+                            <?php if ($jemsettings->showlinkvenue == 1) : ?>
+                                <a href="<?php echo Route::_(PlanjeagendaHelperRoute::getVenueRoute($row->venueslug ?? '')); ?>">
+                                    <?php echo htmlspecialchars($row->venue); ?>
+                                </a>
+                            <?php else : ?>
+                                <?php echo htmlspecialchars($row->venue); ?>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showcity == 1 && !empty($row->city)) : ?>
+                        <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_CITY') . ': ' . htmlspecialchars($row->city); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="fa fa-building" aria-hidden="true"></i>':''); ?>
+                            <?php echo htmlspecialchars($row->city); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showstate == 1 && !empty($row->state)): ?>
+                        <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_STATE') . ': ' . htmlspecialchars($row->state); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="fa fa-map" aria-hidden="true"></i>':''); ?>
+                            <?php echo htmlspecialchars($row->state); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showcat == 1) : ?>
+                        <?php 
+                        $catList = PlanjeagendaOutput::getCategoryList($row->categories, $jemsettings->catlinklist);
+                        $catString = implode(", ", $catList); 
+                        ?>
+                        <div class="klevents-event-info" title="<?php echo strip_tags(Text::_('com_planjeagenda_TABLE_CATEGORY') . ': ' . $catString); ?>">
+                            <?php echo ($showiconsineventdata? '<i class="fa fa-tag" aria-hidden="true"></i>':''); ?>
+                            <?php echo $catString; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($jemsettings->showatte == 1) : ?>
+                         <?php 
+                         $maxPlaces = (int)($row->maxplaces ?? 0);
+                         $regCount = (int)($row->regCount ?? 0);
+                         ?>
+                        <?php if ($regCount > 0) : ?>
+                            <div class="klevents-event-info" title="<?php echo Text::_('com_planjeagenda_TABLE_ATTENDEES') . ': ' . $regCount; ?>">
+                                <?php echo ($showiconsineventdata? '<i class="fa fa-user" aria-hidden="true"></i>':''); ?>
+                                <?php echo $regCount . " / " . $maxPlaces; ?>
+                            </div>
+                        <?php elseif ($maxPlaces == 0) : ?>
+                            <div>
+                                <?php echo ($showiconsineventdata? '<i class="fa fa-user" aria-hidden="true"></i>':''); ?>
+                                &gt; 0
+                            </div>
+                        <?php else : ?>
+                            <div class="klevents-event-info-small klevents-event-attendees">
+                                <?php echo ($showiconsineventdata? '<i class="fa fa-user" aria-hidden="true"></i>':''); ?>
+                                &lt; <?php echo $maxPlaces; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <?php if ($params->get('show_introtext_events') == 1) : ?>
+                    <div class="klevents-event-intro">
+                        <?php echo $row->introtext ?? ''; ?>
+                        <?php $settings = PlanjeagendaHelper::globalattribs(); ?>
+                        <?php if ($settings->get('event_show_readmore') && $row->fulltext != '' && $row->fulltext != '<br />') : ?>
+                            <a href="<?php echo Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)); ?>"><?php echo Text::_('com_planjeagenda_EVENT_READ_MORE_TITLE'); ?></a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <meta itemprop="name" content="<?php echo htmlspecialchars($row->title); ?>"/>
+            <meta itemprop="url" content="<?php echo rtrim($uri->base(), '/').Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)); ?>" />
+            <meta itemprop="identifier" content="<?php echo rtrim($uri->base(), '/').Route::_(PlanjeagendaHelperRoute::getEventRoute($row->slug)); ?>" />
+            <div itemtype="https://schema.org/Place" itemscope itemprop="location" style="display: none;">
+                <meta itemprop="name" content="<?php echo !empty($row->locid) ? htmlspecialchars($row->venue) : 'None'; ?>"/>
+                <?php
+                $microadress = '';
+                if (!empty($row->city)) {
+                    $microadress .= htmlspecialchars($row->city);
+                }
+                if (!empty($microadress)) {
+                    $microadress .= ', ';
+                }
+                if (!empty($row->state)) {
+                    $microadress .= htmlspecialchars($row->state);
+                }
+                if (empty($microadress)) {
+                    $microadress .= '-';
+                }
+                ?>
+                <meta itemprop="address" content="<?php echo $microadress; ?>"/>
+            </div>
+
+            </li>
+        <?php endforeach;
+        
+        $html = ob_get_clean();
+        
+        // Return both HTML and the updated displayedMonths
+        return array(
+            'html' => $html,
+            'displayedMonths' => $displayedMonths
+        );
+    }
+
+    /**
+     * For attachment downloads
+     */
+    public function getfile()
+    {
+        PlanjeagendaDebug::log('getfile', 'id=' . \Joomla\CMS\Factory::getApplication()->input->getInt('id', 0));
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $id = Factory::getApplication()->input->getInt('file', 0);
+        $path = PlanjeagendaAttachment::getAttachmentPath($id);
+
+        if (!$path || !file_exists($path)) {
+             throw new \Exception(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
+        }
+
+        // Verify path is within expected directory to prevent traversal.
+        $attachPath = \Joomla\CMS\Filesystem\Path::clean($path);
+        $basePath   = \Joomla\CMS\Filesystem\Path::clean(JPATH_SITE . '/' . PlanjeagendaHelper::config()->attachments_path);
+        if (strpos($attachPath, $basePath) !== 0) {
+            throw new \Exception(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
+        }
+        $safeFilename = str_replace(["\r", "\n"], '', basename($attachPath));
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
+        header('Content-Length: ' . filesize($attachPath));
+        ob_clean();
+        ob_end_flush();
+        readfile($attachPath);
+        
+        $this->app->close();
+    }
+
+    /**
+     * Delete attachment
+     *
+     * @return true on success
+     * @access public
+     */
+    public function ajaxattachremove()
+    {
+        // Check for request forgeries
+        Session::checkToken('request') or die('Invalid Token');
+
+        $jemsettings = PlanjeagendaHelper::config();
+        $res = 0;
+
+        if ($jemsettings->attachmentenabled > 0) {
+            $id     = Factory::getApplication()->input->getInt('id', 0);
+            $res = PlanjeagendaAttachment::remove($id);
+        } // else don't delete anything
+
+        if (!$res) {
+            echo 0; // The caller expects an answer!
+            $this->app->close();
+        }
+
+        \Joomla\CMS\Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)->createCacheController('callback', ['defaultgroup' => 'com_planjeagenda'])->clean();
+
+        echo 1; // The caller expects an answer!
+        $this->app->close();;
+    }
+
+    /**
+     * Remove image
+     * @deprecated since version 1.9.7
+     */
+    public function ajaximageremove()
+    {
+        // prevent unwanted usage
+        $this->app->close();
+    }
+}

@@ -1,0 +1,1651 @@
+/**
+ * klevents.css — Planjeagenda frontend design
+ * Loaded by loadCss('klevents') on every frontend view.
+ * Override jem.css defaults with modern clean styling.
+ * Targets all frontend views: eventslist, event detail, venue, search, calendar.
+ * Uses CSS custom properties so colours can be tuned in one place.
+ *
+ * Palette:
+ *   --pja-green      primary action / buttons / accents
+ *   --pja-green-dark hover state
+ *   --pja-blue       featured / secondary accent
+ *   --pja-text       body text
+ *   --pja-muted      secondary labels, meta text
+ *   --pja-border     dividers, table borders
+ *   --pja-bg         light background for cards / filter bar
+ *   --pja-white      card background
+ *   --pja-radius     border-radius used consistently
+ */
+
+/* ── Custom properties ───────────────────────────────────────────────── */
+#klevents {
+    --pja-green:       #2e7d32;
+    --pja-green-dark:  #1b5e20;
+    --pja-blue:        #1565c0;
+    --pja-orange:      #e65100;
+    --pja-text:        #212529;
+    --pja-muted:       #6c757d;
+    --pja-border:      #dee2e6;
+    --pja-bg:          #f8f9fa;
+    --pja-white:       #ffffff;
+    --pja-radius:      8px;
+    --pja-shadow:      0 2px 8px rgba(0,0,0,.08);
+    font-family:       inherit;
+    color:             var(--pja-text);
+}
+
+/* ── Reset legacy JEM styles ─────────────────────────────────────────── */
+#klevents .clr,
+#klevents .floattext::after { display: block; clear: both; content: ''; }
+#klevents .floattext { overflow: visible; }
+
+/* ── Global typography ───────────────────────────────────────────────── */
+#klevents h1.componentheading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--pja-text);
+    margin: 0 0 1.25rem;
+    padding-bottom: .75rem;
+    border-bottom: 3px solid var(--pja-green);
+}
+#klevents h2.klevents,
+#klevents h2.location,
+#klevents h2.description,
+#klevents h2.register,
+#klevents h2.contact {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--pja-green);
+    margin: 1.5rem 0 .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+#klevents h2.klevents::before  { content: '\f073'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.location::before  { content: '\f3c5'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.register::before  { content: '\f4fc'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.contact::before   { content: '\f007'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.description::before { content: '\f15c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+
+/* ── Button bar ──────────────────────────────────────────────────────── */
+#klevents .buttons {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#klevents .buttons a,
+#klevents .buttons button {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .45rem 1rem;
+    border-radius: 5px;
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+#klevents .buttons .btn-primary,
+#klevents .buttons a.btn-primary  { background: var(--pja-green); color: #fff; border-color: var(--pja-green); }
+#klevents .buttons .btn-primary:hover { background: var(--pja-green-dark); border-color: var(--pja-green-dark); }
+#klevents .buttons .btn-secondary { background: var(--pja-white); color: var(--pja-text); border-color: var(--pja-border); }
+#klevents .buttons .btn-secondary:hover { background: var(--pja-bg); }
+
+/* ── Filter bar ──────────────────────────────────────────────────────── */
+#jem_filter {
+    background: var(--pja-white);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--pja-shadow-sm);
+}
+#jem_filter .jem_fleft,
+#jem_filter .jem_fright {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    float: none;
+    margin-bottom: .5rem;
+}
+#jem_filter label {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--pja-muted);
+    white-space: nowrap;
+    margin: 0;
+}
+#jem_filter select,
+#jem_filter input.inputbox,
+#jem_filter .form-control,
+#jem_filter input[type="text"],
+#jem_filter input[type="month"] {
+    height: 36px;
+    padding: .3rem .65rem;
+    font-size: .88rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    background: var(--pja-white);
+    color: var(--pja-text);
+    font-family: inherit;
+    transition: border-color .15s, box-shadow .15s;
+}
+#jem_filter select:focus,
+#jem_filter input:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.12);
+}
+#jem_filter .btn,
+#jem_filter button {
+    height: 36px;
+    padding: 0 1.1rem;
+    font-size: .85rem;
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+    transition: background .15s;
+}
+#jem_filter .btn-primary  { background: var(--pja-green); color: #fff; border-color: var(--pja-green); }
+#jem_filter .btn-primary:hover { background: var(--pja-green-dark); }
+#jem_filter .btn-secondary { background: var(--pja-white); color: var(--pja-muted); border-color: var(--pja-border); }
+#jem_filter .btn-secondary:hover { background: var(--pja-bg); color: var(--pja-text); }
+#jem_filter .jem_fright { font-size: .82rem; color: var(--pja-muted); }
+
+/* ── Events list — card-row layout ───────────────────────────────────── */
+/*
+ * Strategy: keep table display intact (don't fight Bootstrap/Joomla resets).
+ * Instead visually transform rows into cards using outline, border-radius,
+ * margin and background — all properties that don't conflict with table layout.
+ */
+
+#klevents .table-responsive {
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+#klevents table.eventtable {
+    border-collapse: separate !important;
+    border-spacing: 0 .5rem !important;
+    background: transparent !important;
+    width: 100% !important;
+}
+
+/* Hide thead visually without changing display (avoids Bootstrap conflict) */
+#klevents table.eventtable thead tr {
+    visibility: hidden !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+#klevents table.eventtable thead th {
+    height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Each body row = card */
+#klevents table.eventtable tbody tr {
+    background: var(--pja-white) !important;
+    border-radius: var(--pja-radius) !important;
+    box-shadow: var(--pja-shadow-sm) !important;
+    transition: box-shadow .15s, transform .12s !important;
+}
+#klevents table.eventtable tbody tr:hover {
+    box-shadow: var(--pja-shadow-md) !important;
+    transform: translateY(-1px) !important;
+}
+#klevents table.eventtable tbody tr.featured {
+    outline: 2px solid #f59e0b !important;
+    outline-offset: -2px !important;
+}
+
+/* Apply border-radius to first/last TD in each row */
+#klevents table.eventtable tbody td:first-child {
+    border-radius: var(--pja-radius) 0 0 var(--pja-radius) !important;
+}
+#klevents table.eventtable tbody td:last-child {
+    border-radius: 0 var(--pja-radius) var(--pja-radius) 0 !important;
+}
+
+/* All body cells */
+#klevents table.eventtable tbody td.header-td {
+    padding: .8rem .75rem !important;
+    vertical-align: middle !important;
+    border: none !important;
+    border-top: 1px solid var(--pja-border) !important;
+    border-bottom: 1px solid var(--pja-border) !important;
+    background: var(--pja-white) !important;
+    font-size: .87rem !important;
+    color: var(--pja-text-body, #374151) !important;
+}
+#klevents table.eventtable tbody td.header-td:first-child {
+    border-left: 1px solid var(--pja-border) !important;
+}
+#klevents table.eventtable tbody td.header-td:last-child {
+    border-right: 1px solid var(--pja-border) !important;
+}
+
+/* Date cell — green background, left accent */
+#klevents table.eventtable tbody td[headers="jem_date"] {
+    background: var(--pja-bg, #f8fafd) !important;
+    color: var(--pja-green) !important;
+    font-weight: 700 !important;
+    font-size: .82rem !important;
+    white-space: nowrap !important;
+    border-left: 3px solid var(--pja-green) !important;
+    width: 95px !important;
+}
+
+/* Title cell */
+#klevents table.eventtable tbody td[headers="jem_title"] {
+    font-size: .95rem !important;
+}
+#klevents table.eventtable tbody td[headers="jem_title"] a {
+    font-weight: 700 !important;
+    color: var(--pja-text, #1a2e5a) !important;
+    text-decoration: none !important;
+    transition: color .15s !important;
+}
+#klevents table.eventtable tbody td[headers="jem_title"] a:hover {
+    color: var(--pja-green) !important;
+}
+
+/* Intro text */
+#klevents .klevents-event-intro {
+    font-size: .78rem !important;
+    color: var(--pja-muted, #6c757d) !important;
+    margin-top: .25rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Location / city / state */
+#klevents table.eventtable tbody td[headers="jem_location"],
+#klevents table.eventtable tbody td[headers="jem_city"],
+#klevents table.eventtable tbody td[headers="jem_state"] {
+    color: var(--pja-muted, #6c757d) !important;
+    font-size: .82rem !important;
+    white-space: nowrap !important;
+    max-width: 120px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+#klevents table.eventtable tbody td[headers="jem_location"] a {
+    color: var(--pja-muted, #6c757d) !important;
+    text-decoration: none !important;
+}
+#klevents table.eventtable tbody td[headers="jem_location"] a:hover {
+    color: var(--pja-green) !important;
+}
+
+/* Category badge */
+#klevents table.eventtable tbody td[headers="jem_category"] {
+    white-space: nowrap !important;
+}
+#klevents table.eventtable tbody td[headers="jem_category"] a,
+#klevents table.eventtable tbody td[headers="jem_category"] span {
+    display: inline-block !important;
+    padding: 2px 10px !important;
+    border-radius: 20px !important;
+    font-size: .72rem !important;
+    font-weight: 700 !important;
+    background: #e8f5e9 !important;
+    color: var(--pja-green) !important;
+    border: 1px solid rgba(46,125,50,.2) !important;
+    text-decoration: none !important;
+}
+
+/* No events row */
+#klevents table.eventtable .no_events td {
+    padding: 2rem 1rem !important;
+    text-align: center !important;
+    color: var(--pja-muted, #6c757d) !important;
+    font-size: .92rem !important;
+    border: 1px dashed var(--pja-border) !important;
+    border-radius: var(--pja-radius) !important;
+    background: var(--pja-white) !important;
+}
+
+/* Featured + icons */
+#klevents .klevents-featured-icon { color: #f59e0b; margin-left: .3rem; }
+#klevents .klevents-recurrence-icon { color: var(--pja-muted, #6c757d); font-size: .8em; margin-left: .25rem; }
+
+/* Responsive */
+@media (max-width: 860px) {
+    #klevents table.eventtable tbody td[headers="jem_city"],
+    #klevents table.eventtable tbody td[headers="jem_state"],
+    #klevents table.eventtable tbody td[headers="jem_attendees"] {
+        display: none !important;
+    }
+}
+@media (max-width: 600px) {
+    #klevents table.eventtable tbody td[headers="jem_location"] {
+        display: none !important;
+    }
+}
+
+/* ── Event detail page ───────────────────────────────────────────────── */
+#klevents.jem_event {
+    max-width: 900px;
+}
+
+/* Event hero image */
+#klevents.jem_event .jem-flyer,
+#klevents.jem_event .jem-event-image {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--pja-shadow);
+}
+#klevents.jem_event .jem-flyer img,
+#klevents.jem_event .jem-event-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Info definition list */
+#klevents .event_info,
+#klevents dl.location {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.25rem;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: .5rem .75rem;
+    align-items: baseline;
+}
+#klevents .event_info dt,
+#klevents dl.location dt {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--pja-muted);
+    margin: 0;
+    padding: 0;
+}
+#klevents .event_info dd,
+#klevents dl.location dd {
+    font-size: .95rem;
+    color: var(--pja-text);
+    margin: 0;
+    padding: 0;
+}
+#klevents .event_info dd.when,
+#klevents .event_info dd[class="when"] {
+    color: var(--pja-green);
+    font-weight: 700;
+    font-size: 1rem;
+}
+#klevents .event_info dd.category a {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: var(--pja-green);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin: 1px 2px;
+}
+
+/* Description section */
+#klevents .description.event_desc {
+    font-size: .95rem;
+    line-height: 1.7;
+    color: var(--pja-text);
+    margin-bottom: 1.5rem;
+}
+#klevents .description.event_desc h1,
+#klevents .description.event_desc h2,
+#klevents .description.event_desc h3 {
+    margin-top: 1.25rem;
+    color: var(--pja-text);
+}
+
+/* Dividers */
+#klevents hr,
+#klevents hr.klevents-hr {
+    border: none;
+    border-top: 1px solid var(--pja-border);
+    margin: 1.5rem 0;
+}
+
+/* ── Registration section ────────────────────────────────────────────── */
+#klevents h2.register {
+    margin-top: 1.5rem;
+}
+/* Registration form */
+#klevents .jem-register-form,
+#klevents #klevents-registration {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1.25rem;
+    margin-top: 1rem;
+}
+/* Attendees list */
+#klevents ul.jem-registered-list {
+    list-style: none;
+    padding: 0;
+    margin: .75rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+#klevents ul.jem-registered-list li {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--pja-white);
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    padding: .35rem .75rem;
+    font-size: .85rem;
+}
+#klevents ul.jem-registered-list img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Register / unregister buttons */
+#klevents a.jem-register-btn,
+#klevents .jem-register-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 1.4rem;
+    background: var(--pja-green);
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background .15s;
+    margin-top: .75rem;
+}
+#klevents a.jem-register-btn:hover { background: var(--pja-green-dark); color: #fff; }
+#klevents a.jem-unregister-btn {
+    background: transparent;
+    color: var(--pja-muted);
+    border: 1px solid var(--pja-border);
+}
+#klevents a.jem-unregister-btn:hover { background: var(--pja-bg); color: var(--pja-text); }
+
+/* Waitinglist badge */
+#klevents .jem-waitinglist-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #fff3e0;
+    color: var(--pja-orange);
+    border: 1px solid #ffe0b2;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-left: .5rem;
+}
+
+/* Places count */
+#klevents .jem-places-count {
+    font-size: .85rem;
+    color: var(--pja-muted);
+    margin-top: .5rem;
+}
+#klevents .jem-places-count strong { color: var(--pja-text); }
+
+/* ── Venue detail page ───────────────────────────────────────────────── */
+#klevents.jem_venue .klevents-venue-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--pja-text);
+    margin-bottom: 1rem;
+}
+#klevents.jem_venue .jem-flyer {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--pja-shadow);
+}
+#klevents.jem_venue dl.location {
+    margin-bottom: 1.25rem;
+}
+#klevents.jem_venue .klevents-map {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin: 1rem 0;
+    border: 1px solid var(--pja-border);
+}
+
+/* ── Search page ─────────────────────────────────────────────────────── */
+#klevents.jem_search .jem-search-form {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+#klevents.jem_search .jem-search-field {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+#klevents.jem_search label {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--pja-muted);
+}
+#klevents.jem_search select,
+#klevents.jem_search input[type="text"],
+#klevents.jem_search input[type="date"] {
+    padding: .45rem .7rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .9rem;
+    background: var(--pja-white);
+    color: var(--pja-text);
+}
+#klevents.jem_search select:focus,
+#klevents.jem_search input:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.15);
+}
+#klevents.jem_search .jem-search-buttons {
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+}
+#klevents.jem_search .btn-primary  { background: var(--pja-green); color: #fff; border: none; padding: .5rem 1.25rem; border-radius: 5px; font-weight: 600; cursor: pointer; }
+#klevents.jem_search .btn-primary:hover { background: var(--pja-green-dark); }
+#klevents.jem_search .btn-secondary { background: var(--pja-white); color: var(--pja-muted); border: 1px solid var(--pja-border); padding: .5rem 1rem; border-radius: 5px; cursor: pointer; }
+
+/* ── Pagination ──────────────────────────────────────────────────────── */
+#klevents .pagination,
+.pja-pagination { margin-top: 1.5rem; }
+#klevents .pagination ul,
+.pagination.pja-pagination ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#klevents .pagination li a,
+#klevents .pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 .6rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .85rem;
+    text-decoration: none;
+    color: var(--pja-text);
+    background: var(--pja-white);
+    transition: background .12s, border-color .12s;
+}
+#klevents .pagination li.active a,
+#klevents .pagination li.active span,
+#klevents .pagination li span.active {
+    background: var(--pja-green);
+    color: #fff;
+    border-color: var(--pja-green);
+    font-weight: 700;
+}
+#klevents .pagination li a:hover { background: var(--pja-bg); border-color: var(--pja-green); color: var(--pja-green); }
+
+/* ── Attachments ─────────────────────────────────────────────────────── */
+#klevents .attachments {
+    margin: 1rem 0;
+}
+#klevents .attachments a {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem .9rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .85rem;
+    color: var(--pja-text);
+    text-decoration: none;
+    background: var(--pja-white);
+    margin: .25rem .25rem .25rem 0;
+    transition: border-color .15s, background .15s;
+}
+#klevents .attachments a:hover {
+    border-color: var(--pja-green);
+    background: var(--pja-bg);
+    color: var(--pja-green);
+}
+
+/* ── Copyright / footer note ─────────────────────────────────────────── */
+#klevents .copyright {
+    font-size: .75rem;
+    color: var(--pja-muted);
+    margin-top: 2rem;
+    text-align: right;
+}
+
+/* ── Recurrence icon ─────────────────────────────────────────────────── */
+#klevents .klevents-recurrence-icon {
+    color: var(--pja-muted);
+    font-size: .8em;
+    margin-left: .25rem;
+}
+
+/* ── jem-responsive overrides ────────────────────────────────────────── */
+@media (max-width: 767px) {
+    #klevents .event_info,
+    #klevents dl.location {
+        grid-template-columns: 1fr;
+        gap: .25rem .5rem;
+    }
+    #klevents .event_info dt,
+    #klevents dl.location dt {
+        margin-top: .5rem;
+    }
+    #jem_filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    #jem_filter .jem_fleft,
+    #jem_filter .jem_fright { width: 100%; }
+    #klevents .eventtable .jem_col_state,
+    #klevents .eventtable .jem_col_category,
+    #klevents .eventtable .jem_col_attendees { display: none; }
+    #klevents.jem_search .jem-search-form { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    #klevents .eventtable .jem_col_venue,
+    #klevents .eventtable .jem_col_city { display: none; }
+    #klevents .eventtable .jem_col_date { font-size: .78rem; }
+    #klevents h1.componentheading { font-size: 1.3rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   EDIT EVENT / EDIT VENUE — frontend edit form
+   Covers: jem_editevent, jem_editvenue
+   Both forms share adminformlist / fieldset / legend patterns.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ─────────────────────────────────────────────────────────── */
+#klevents.jem_editevent,
+#klevents.jem_editvenue {
+    max-width: 860px;
+}
+
+/* ── Save / Cancel button bar ────────────────────────────────────────── */
+#klevents.jem_editevent > .edit,
+#klevents.jem_editvenue > .edit {
+    padding: 0;
+}
+#klevents.jem_editevent .btn.btn-primary,
+#klevents.jem_editvenue .btn.btn-primary {
+    background: var(--pja-green);
+    border-color: var(--pja-green);
+    color: #fff;
+    font-weight: 600;
+    padding: .5rem 1.4rem;
+    border-radius: 6px;
+    font-size: .9rem;
+}
+#klevents.jem_editevent .btn.btn-primary:hover,
+#klevents.jem_editvenue .btn.btn-primary:hover {
+    background: var(--pja-green-dark);
+    border-color: var(--pja-green-dark);
+}
+#klevents.jem_editevent .btn.btn-secondary,
+#klevents.jem_editvenue .btn.btn-secondary {
+    background: var(--pja-white);
+    color: var(--pja-muted);
+    border: 1px solid var(--pja-border);
+    font-weight: 600;
+    padding: .5rem 1.2rem;
+    border-radius: 6px;
+    font-size: .9rem;
+}
+#klevents.jem_editevent .btn.btn-secondary:hover,
+#klevents.jem_editvenue .btn.btn-secondary:hover {
+    background: var(--pja-bg);
+    color: var(--pja-text);
+}
+
+/* ── Tab navigation (uitab → Bootstrap nav-tabs) ─────────────────────── */
+#klevents.jem_editevent .nav-tabs,
+#klevents.jem_editvenue .nav-tabs {
+    border-bottom: 2px solid var(--pja-border);
+    margin-bottom: 1.25rem;
+    gap: 2px;
+}
+#klevents.jem_editevent .nav-tabs .nav-link,
+#klevents.jem_editvenue .nav-tabs .nav-link {
+    color: var(--pja-muted);
+    font-size: .85rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    padding: .55rem 1.1rem;
+    margin-bottom: -2px;
+    transition: color .15s, background .15s;
+}
+#klevents.jem_editevent .nav-tabs .nav-link:hover,
+#klevents.jem_editvenue .nav-tabs .nav-link:hover {
+    color: var(--pja-text);
+    background: var(--pja-bg);
+    border-color: var(--pja-border) var(--pja-border) transparent;
+}
+#klevents.jem_editevent .nav-tabs .nav-link.active,
+#klevents.jem_editvenue .nav-tabs .nav-link.active {
+    color: var(--pja-green);
+    background: var(--pja-white);
+    border-color: var(--pja-border) var(--pja-border) var(--pja-white);
+    font-weight: 700;
+}
+
+/* ── Fieldsets ───────────────────────────────────────────────────────── */
+#klevents.jem_editevent fieldset,
+#klevents.jem_editvenue fieldset {
+    border: 1px solid var(--pja-border) !important;
+    border-radius: var(--pja-radius);
+    padding: 1.1rem 1.25rem;
+    margin: 0 0 1.25rem;
+    background: var(--pja-white);
+}
+#klevents.jem_editevent legend,
+#klevents.jem_editvenue legend {
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--pja-green);
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 .5rem 0 0;
+    line-height: 1.2;
+    float: none;
+    width: auto;
+}
+
+/* ── adminformlist — label + input rows ──────────────────────────────── */
+#klevents.jem_editevent ul.adminformlist,
+#klevents.jem_editvenue ul.adminformlist {
+    list-style: none;
+    margin: .5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+#klevents.jem_editevent ul.adminformlist li,
+#klevents.jem_editvenue ul.adminformlist li {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: start;
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+}
+
+/* Labels */
+#klevents.jem_editevent ul.adminformlist label,
+#klevents.jem_editvenue ul.adminformlist label {
+    font-size: .83rem;
+    font-weight: 600;
+    color: var(--pja-muted);
+    padding-top: .45rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Inputs — all variants */
+#klevents.jem_editevent ul.adminformlist input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+#klevents.jem_editevent ul.adminformlist select,
+#klevents.jem_editevent ul.adminformlist textarea,
+#klevents.jem_editvenue ul.adminformlist input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+#klevents.jem_editvenue ul.adminformlist select,
+#klevents.jem_editvenue ul.adminformlist textarea {
+    width: 100%;
+    padding: .42rem .65rem;
+    font-size: .9rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    background: var(--pja-white);
+    color: var(--pja-text);
+    transition: border-color .15s, box-shadow .15s;
+    /* Override jem.css grey background */
+    background-color: var(--pja-white) !important;
+}
+#klevents.jem_editevent ul.adminformlist input:focus,
+#klevents.jem_editevent ul.adminformlist select:focus,
+#klevents.jem_editevent ul.adminformlist textarea:focus,
+#klevents.jem_editvenue ul.adminformlist input:focus,
+#klevents.jem_editvenue ul.adminformlist select:focus,
+#klevents.jem_editvenue ul.adminformlist textarea:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.15);
+    background-color: var(--pja-white) !important;
+}
+
+/* Readonly fields */
+#klevents.jem_editevent ul.adminformlist input[readonly],
+#klevents.jem_editvenue ul.adminformlist input[readonly] {
+    background: var(--pja-bg) !important;
+    color: var(--pja-muted);
+    cursor: default;
+}
+
+/* Required field indicator */
+#klevents.jem_editevent ul.adminformlist label.required::after,
+#klevents.jem_editvenue ul.adminformlist label.required::after {
+    content: ' *';
+    color: #dc3545;
+}
+
+/* Checkboxes / radios — don't stretch them */
+#klevents.jem_editevent ul.adminformlist input[type="checkbox"],
+#klevents.jem_editevent ul.adminformlist input[type="radio"],
+#klevents.jem_editvenue ul.adminformlist input[type="checkbox"],
+#klevents.jem_editvenue ul.adminformlist input[type="radio"] {
+    width: auto;
+    margin-top: .5rem;
+}
+
+/* ── Description fieldset — full-width editor ────────────────────────── */
+#klevents.jem_editevent fieldset .clr,
+#klevents.jem_editvenue fieldset .clr {
+    display: block;
+    clear: both;
+    height: .5rem;
+}
+
+/* ── Image fieldset ──────────────────────────────────────────────────── */
+#klevents.jem_editevent .jem_fldst_image img,
+#klevents.jem_editvenue .jem_fldst_image img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: .75rem;
+    display: block;
+}
+#klevents.jem_editevent .jem_fldst_image .button3,
+#klevents.jem_editvenue .jem_fldst_image .button3 {
+    padding: .35rem .8rem;
+    font-size: .82rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    background: var(--pja-white);
+    color: var(--pja-muted);
+    cursor: pointer;
+    margin-top: .25rem;
+}
+
+/* ── Meta / formelm-area ─────────────────────────────────────────────── */
+#klevents.jem_editevent .formelm-area,
+#klevents.jem_editvenue .formelm-area {
+    margin-bottom: 1rem;
+}
+#klevents.jem_editevent .formelm-area label,
+#klevents.jem_editvenue .formelm-area label {
+    font-size: .83rem;
+    font-weight: 600;
+    color: var(--pja-muted);
+    display: block;
+    margin-bottom: .35rem;
+}
+#klevents.jem_editevent .formelm-area textarea,
+#klevents.jem_editvenue .formelm-area textarea {
+    width: 100%;
+    padding: .5rem .65rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .88rem;
+    resize: vertical;
+    background: var(--pja-white);
+    color: var(--pja-text);
+}
+#klevents.jem_editevent .formelm-area textarea:focus,
+#klevents.jem_editvenue .formelm-area textarea:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.15);
+}
+/* Keyword insert buttons */
+#klevents.jem_editevent .formelm-area input.btn,
+#klevents.jem_editvenue .formelm-area input.btn {
+    font-size: .78rem;
+    padding: .25rem .6rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 4px;
+    background: var(--pja-bg);
+    color: var(--pja-text);
+    cursor: pointer;
+    margin: 0 .2rem .3rem 0;
+}
+#klevents.jem_editevent .formelm-area input.btn:hover,
+#klevents.jem_editvenue .formelm-area input.btn:hover {
+    background: var(--pja-green);
+    color: #fff;
+    border-color: var(--pja-green);
+}
+
+/* ── Recurrence notice ───────────────────────────────────────────────── */
+#klevents.jem_editevent .description.warningrecurrence,
+#klevents.jem_editvenue .description.warningrecurrence {
+    background: #fff3e0;
+    border-left: 4px solid var(--pja-orange);
+    border-radius: 0 5px 5px 0;
+    padding: .75rem 1rem;
+    font-size: .85rem;
+    color: #7f4000;
+    margin-bottom: 1rem;
+}
+
+/* ── Mobile — stack label above input ────────────────────────────────── */
+@media (max-width: 600px) {
+    #klevents.jem_editevent ul.adminformlist li,
+    #klevents.jem_editvenue ul.adminformlist li {
+        grid-template-columns: 1fr;
+    }
+    #klevents.jem_editevent ul.adminformlist label,
+    #klevents.jem_editvenue ul.adminformlist label {
+        padding-top: 0;
+        white-space: normal;
+    }
+}
+
+
+/* ── Pagination ──────────────────────────────────────────────────────── */
+#klevents .pja-ev-pagination { margin-top: 1.25rem; }
+
+/* Joomla 6 renders pagination as <ul class="pagination"> */
+#klevents .pagination,
+#klevents .pja-ev-pagination .pagination {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: .3rem !important;
+    align-items: center !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 1.25rem auto 0 !important;
+    justify-content: center !important;
+}
+#klevents .pagination .page-item { list-style: none !important; }
+
+/* All pagination links and spans */
+#klevents .pagination .page-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 .65rem !important;
+    border: 1.5px solid #e0e8f0 !important;
+    border-radius: 8px !important;
+    font-size: .85rem !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    background: #fff !important;
+    text-decoration: none !important;
+    transition: all .15s !important;
+    font-family: inherit !important;
+    line-height: 1 !important;
+}
+#klevents .pagination .page-link:hover {
+    background: #e8f5e9 !important;
+    border-color: #2e7d32 !important;
+    color: #2e7d32 !important;
+    text-decoration: none !important;
+}
+#klevents .pagination .page-item.active .page-link {
+    background: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+    color: #fff !important;
+}
+#klevents .pagination .page-item.disabled .page-link {
+    opacity: .35 !important;
+    pointer-events: none !important;
+    color: #9ca3af !important;
+}
+/* Prev/next arrow icons — Joomla uses SVG inside .page-link */
+#klevents .pagination .page-link svg { fill: currentColor !important; }
+/* If arrows are text characters */
+#klevents .pagination .page-item:first-child .page-link,
+#klevents .pagination .page-item:last-child .page-link { font-size: 1rem !important; }
+
+/* ── Breadcrumb ──────────────────────────────────────────────────────── */
+.pja-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .8rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.pja-breadcrumb ol,
+.pja-breadcrumb ul { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; list-style: none; padding: 0; margin: 0; }
+.pja-breadcrumb li { display: flex; align-items: center; gap: .35rem; }
+.pja-breadcrumb li + li::before { content: "/"; color: #d1d5db; }
+.pja-breadcrumb a { color: #6b7280; text-decoration: none; transition: color .15s; }
+.pja-breadcrumb a:hover { color: #2e7d32; }
+.pja-breadcrumb .active,
+.pja-breadcrumb li:last-child { color: #1a2e5a; font-weight: 600; }
+/* Joomla breadcrumb module output */
+.breadcrumb { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; list-style: none; padding: 0; margin: 0 0 1rem; font-size: .8rem; }
+.breadcrumb-item { display: flex; align-items: center; gap: .35rem; }
+.breadcrumb-item + .breadcrumb-item::before { content: "/"; color: #d1d5db; }
+.breadcrumb-item a { color: #6b7280; text-decoration: none; }
+.breadcrumb-item a:hover { color: #2e7d32; }
+.breadcrumb-item.active { color: #1a2e5a; font-weight: 600; }
+
+
+/* ── Pagination arrow/icon fixes ─────────────────────────────────────── */
+/* All pagination links must have visible color regardless of state */
+#klevents .pagination .page-item .page-link,
+#klevents .pagination .page-item span,
+#klevents .pagination li .page-link,
+#klevents .pagination li a,
+#klevents .pagination li span {
+    color: #374151 !important;
+    background-color: #fff !important;
+}
+#klevents .pagination .page-item .page-link svg,
+#klevents .pagination .page-item span svg {
+    fill: #374151 !important;
+    stroke: #374151 !important;
+    color: #374151 !important;
+}
+#klevents .pagination .page-item.active .page-link,
+#klevents .pagination .page-item.active .page-link svg {
+    color: #fff !important;
+    fill: #fff !important;
+    background-color: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+}
+#klevents .pagination .page-item.disabled .page-link { opacity: .3 !important; }
+/* Force icon visibility in prev/next/start/end buttons */
+#klevents .pagination .page-link * { color: inherit !important; fill: currentColor !important; }
+
+/* ── Force pagination visibility — BS5 vars on the element itself ─────── */
+.pja-ev-pagination {
+    --bs-pagination-color:               #374151;
+    --bs-pagination-bg:                  #ffffff;
+    --bs-pagination-border-color:        #e0e8f0;
+    --bs-pagination-hover-color:         #2e7d32;
+    --bs-pagination-hover-bg:            #e8f5e9;
+    --bs-pagination-hover-border-color:  #2e7d32;
+    --bs-pagination-focus-color:         #2e7d32;
+    --bs-pagination-focus-bg:            #e8f5e9;
+    --bs-pagination-active-color:        #ffffff;
+    --bs-pagination-active-bg:           #2e7d32;
+    --bs-pagination-active-border-color: #2e7d32;
+    --bs-pagination-disabled-color:      #9ca3af;
+    --bs-pagination-disabled-bg:         #ffffff;
+    --bs-pagination-disabled-border-color: #e0e8f0;
+}
+/* Also set on pagination itself for full coverage */
+.pja-ev-pagination .pagination {
+    --bs-pagination-color:              #374151;
+    --bs-pagination-active-color:       #ffffff;
+    --bs-pagination-active-bg:          #2e7d32;
+}
+.pja-ev-pagination .page-link {
+    color: #374151 !important;
+    background-color: #fff !important;
+    border-color: #e0e8f0 !important;
+}
+.pja-ev-pagination .page-link svg,
+.pja-ev-pagination .page-link svg path,
+.pja-ev-pagination .page-link svg polygon {
+    fill: #374151 !important;
+    color: #374151 !important;
+}
+.pja-ev-pagination .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+}
+.pja-ev-pagination .page-item.active .page-link svg,
+.pja-ev-pagination .page-item.active .page-link svg path {
+    fill: #fff !important;
+}
+.pja-ev-pagination .page-item.disabled .page-link {
+    opacity: .35 !important;
+}
+
+
+/* ── Event tag pills ─────────────────────────────────────────────────── */
+#klevents .pja-ev-tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    margin-top: .45rem;
+}
+#klevents .pja-ev-tag-pill {
+    display: inline-block;
+    padding: .15rem .55rem;
+    background: #f0f4ff;
+    border: 1px solid #c7d7f5;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 600;
+    color: #3a5cbf;
+    text-decoration: none;
+    transition: all .15s;
+    white-space: nowrap;
+}
+#klevents .pja-ev-tag-pill:hover {
+    background: #3a5cbf;
+    border-color: #3a5cbf;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   PLANJEAGENDA — UNIFIED VIEW STYLES  v6.1.0
+   Covers: venue, venues, venueslist, category, categories,
+           myevents, myattendances, myvenues + shared components
+   Design: navy #1a2e5a / green #2e7d32 / clean cards / generous spacing
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared page chrome ──────────────────────────────────────────────── */
+#klevents { font-family: var(--pja-font, 'Plus Jakarta Sans', system-ui, sans-serif); }
+
+/* Back link (used across all detail views) */
+#klevents .pja-back-link {
+    display: inline-flex; align-items: center; gap: .4rem;
+    color: #6b7280; text-decoration: none;
+    font-size: .83rem; font-weight: 600;
+    margin-bottom: 1.25rem; transition: color .15s;
+}
+#klevents .pja-back-link:hover { color: #1a2e5a; text-decoration: none; }
+
+/* Page title */
+#klevents .pja-page-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #1a2e5a;
+    letter-spacing: -.03em;
+    margin: 0 0 .4rem;
+    line-height: 1.2;
+}
+/* Subtitle / intro below title */
+#klevents .pja-page-subtitle {
+    font-size: .95rem; color: #6b7280;
+    margin-bottom: 1.75rem; line-height: 1.6;
+}
+
+/* Accent divider */
+#klevents .pja-accent-bar {
+    height: 3px; border-radius: 3px;
+    background: var(--pja-green, #2e7d32);
+    width: 48px; margin-bottom: 1.5rem;
+}
+
+/* Colour pill badge */
+#klevents .pja-colour-pill {
+    display: inline-flex; align-items: center;
+    padding: .2rem .7rem; border-radius: 20px;
+    font-size: .75rem; font-weight: 700; color: #fff;
+    margin-bottom: .85rem;
+}
+
+/* ── Shared card ─────────────────────────────────────────────────────── */
+#klevents .pja-card {
+    background: #fff;
+    border: 1px solid #e0e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,46,90,.06);
+    transition: box-shadow .2s, transform .2s;
+}
+#klevents .pja-card:hover {
+    box-shadow: 0 6px 24px rgba(26,46,90,.1);
+    transform: translateY(-2px);
+}
+#klevents .pja-card__img {
+    width: 100%; height: 180px; object-fit: cover; display: block;
+}
+#klevents .pja-card__img-placeholder {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f0f4f8 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: #9ca3af; font-size: 2.5rem;
+}
+#klevents .pja-card__body { padding: 1.1rem 1.25rem; }
+#klevents .pja-card__title {
+    font-size: 1rem; font-weight: 700; color: #1a2e5a;
+    text-decoration: none; line-height: 1.35;
+    display: block; margin-bottom: .45rem;
+}
+#klevents .pja-card__title:hover { color: #2e7d32; text-decoration: none; }
+#klevents .pja-card__meta {
+    font-size: .8rem; color: #6b7280;
+    display: flex; align-items: center; gap: .35rem;
+    margin-bottom: .3rem; line-height: 1.4;
+}
+#klevents .pja-card__footer {
+    padding: .75rem 1.25rem;
+    border-top: 1px solid #f0f4f8;
+    display: flex; align-items: center; justify-content: space-between;
+}
+#klevents .pja-card__cta {
+    font-size: .8rem; font-weight: 700; color: #2e7d32;
+    text-decoration: none; display: flex; align-items: center; gap: .25rem;
+}
+#klevents .pja-card__cta:hover { text-decoration: underline; }
+
+/* Card grid */
+#klevents .pja-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* ── Info panel (detail views aside) ────────────────────────────────── */
+#klevents .pja-info-panel {
+    background: #f8fafd;
+    border: 1px solid #e0e8f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+}
+#klevents .pja-info-panel__heading {
+    font-size: .72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: #9ca3af; margin: 0 0 1rem;
+}
+#klevents .pja-info-row {
+    display: flex; gap: .75rem; align-items: flex-start;
+    margin-bottom: .9rem; font-size: .88rem;
+    color: #374151; line-height: 1.5;
+}
+#klevents .pja-info-row:last-child { margin-bottom: 0; }
+#klevents .pja-info-icon {
+    flex-shrink: 0; width: 34px; height: 34px;
+    border-radius: 8px; background: #fff;
+    border: 1px solid #e0e8f0;
+    display: flex; align-items: center; justify-content: center;
+    color: #2e7d32;
+}
+#klevents .pja-info-label {
+    display: block; font-size: .7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: #9ca3af; margin-bottom: .1rem;
+}
+#klevents .pja-info-value { font-weight: 600; color: #1a2e5a; }
+#klevents .pja-info-value a { color: #1565c0; text-decoration: none; }
+#klevents .pja-info-value a:hover { text-decoration: underline; }
+
+/* ── Two-column detail layout ─────────────────────────────────────── */
+#klevents .pja-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2.5rem;
+    align-items: start;
+}
+#klevents .pja-detail-layout .pja-info-panel {
+    position: sticky; top: 84px;
+}
+#klevents .pja-detail-body { min-width: 0; }
+
+/* ── Section heading ─────────────────────────────────────────────── */
+#klevents .pja-section-heading {
+    font-size: 1.05rem; font-weight: 800;
+    color: #1a2e5a; letter-spacing: -.02em;
+    margin: 2rem 0 1rem;
+    display: flex; align-items: center; gap: .6rem;
+}
+#klevents .pja-section-heading::after {
+    content: ''; flex: 1; height: 1px; background: #e8ecf4;
+}
+
+/* ── Action buttons ─────────────────────────────────────────────── */
+#klevents .pja-btn-stack { display: flex; flex-direction: column; gap: .5rem; margin-top: 1.25rem; }
+#klevents .pja-btn-green {
+    display: flex; align-items: center; justify-content: center; gap: .4rem;
+    padding: .65rem 1rem;
+    background: #2e7d32; color: #fff; border: none;
+    border-radius: 10px; font-size: .88rem; font-weight: 700;
+    font-family: inherit; text-decoration: none; cursor: pointer;
+    transition: background .15s;
+}
+#klevents .pja-btn-green:hover { background: #4caf50; text-decoration: none; color: #fff; }
+#klevents .pja-btn-outline {
+    display: flex; align-items: center; justify-content: center; gap: .4rem;
+    padding: .55rem 1rem;
+    background: #fff; color: #374151;
+    border: 1.5px solid #e0e8f0; border-radius: 10px;
+    font-size: .85rem; font-weight: 600; font-family: inherit;
+    text-decoration: none; cursor: pointer; transition: all .15s;
+}
+#klevents .pja-btn-outline:hover { border-color: #2e7d32; color: #2e7d32; text-decoration: none; }
+
+/* Login CTA */
+#klevents .pja-login-cta {
+    background: linear-gradient(135deg, #f0f9f0, #e8f5e9);
+    border: 1px solid #c8e6c9; border-radius: 14px;
+    padding: 2.5rem; text-align: center;
+}
+#klevents .pja-login-cta h2 { color: #1b5e20; margin-bottom: .5rem; font-size: 1.2rem; }
+#klevents .pja-login-cta p { color: #374151; margin-bottom: 1.5rem; font-size: .9rem; }
+
+/* ── DL lists → clean info rows ──────────────────────────────────── */
+#klevents .pja-dl { margin: 0; }
+#klevents .pja-dl dt {
+    font-size: .72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+    color: #9ca3af; margin-top: .85rem; margin-bottom: .15rem;
+}
+#klevents .pja-dl dt:first-child { margin-top: 0; }
+#klevents .pja-dl dd {
+    font-size: .9rem; font-weight: 600; color: #1a2e5a;
+    margin: 0; line-height: 1.5;
+}
+#klevents .pja-dl dd a { color: #1565c0; text-decoration: none; }
+#klevents .pja-dl dd a:hover { text-decoration: underline; }
+
+/* ── Event table (shared by category/venue/my* views) ────────────── */
+#klevents .pja-event-table-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e0e8f0;
+    margin-bottom: 1.5rem;
+}
+#klevents table.eventtable {
+    width: 100%; border-collapse: collapse;
+    font-size: .88rem;
+}
+#klevents table.eventtable thead th {
+    background: #f8fafd;
+    color: #6b7280; font-size: .72rem;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; padding: .7rem 1rem;
+    border-bottom: 1px solid #e0e8f0;
+    white-space: nowrap; text-align: left;
+}
+#klevents table.eventtable thead th a { color: inherit; text-decoration: none; }
+#klevents table.eventtable thead th a:hover { color: #2e7d32; }
+#klevents table.eventtable tbody tr {
+    border-bottom: 1px solid #f0f4f8;
+    transition: background .1s;
+}
+#klevents table.eventtable tbody tr:last-child { border-bottom: none; }
+#klevents table.eventtable tbody tr:hover { background: #fafcff; }
+#klevents table.eventtable tbody td {
+    padding: .75rem 1rem; vertical-align: middle;
+    color: #374151; line-height: 1.4;
+}
+#klevents table.eventtable tbody td a {
+    color: #1a2e5a; font-weight: 600; text-decoration: none;
+}
+#klevents table.eventtable tbody td a:hover { color: #2e7d32; }
+#klevents table.eventtable tbody td.date-col { white-space: nowrap; }
+#klevents table.eventtable .cat-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: .35rem; vertical-align: middle;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   VENUE DETAIL VIEW
+   ════════════════════════════════════════════════════════════════════════ */
+#klevents.jem_venue .pja-venue-hero {
+    position: relative; border-radius: 14px; overflow: hidden;
+    height: 260px; margin-bottom: 2rem; background: #f0f4f8;
+}
+#klevents.jem_venue .pja-venue-hero img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+#klevents.jem_venue .pja-venue-hero-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; background: linear-gradient(135deg, #e8f5e9, #f0f4f8);
+}
+#klevents.jem_venue .pja-venue-address {
+    font-size: .9rem; color: #6b7280; line-height: 1.7;
+}
+#klevents.jem_venue .pja-venue-map-link {
+    display: inline-flex; align-items: center; gap: .35rem;
+    margin-top: .75rem; font-size: .83rem; font-weight: 600;
+    color: #1565c0; text-decoration: none;
+}
+#klevents.jem_venue .pja-venue-map-link:hover { text-decoration: underline; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   VENUES LIST VIEW
+   ════════════════════════════════════════════════════════════════════════ */
+#klevents.jem_venues .pja-venue-card {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    padding: 1.25rem;
+    background: #fff; border: 1px solid #e0e8f0;
+    border-radius: 12px; margin-bottom: 1rem;
+    transition: box-shadow .2s;
+}
+#klevents.jem_venues .pja-venue-card:hover { box-shadow: 0 4px 16px rgba(26,46,90,.08); }
+#klevents.jem_venues .pja-venue-icon {
+    flex-shrink: 0; width: 52px; height: 52px;
+    background: linear-gradient(135deg, #e8f5e9, #f0f9f0);
+    border-radius: 12px; display: flex; align-items: center;
+    justify-content: center; color: #2e7d32;
+}
+#klevents.jem_venues .pja-venue-card__name {
+    font-size: 1rem; font-weight: 700; color: #1a2e5a;
+    text-decoration: none; margin-bottom: .25rem; display: block;
+}
+#klevents.jem_venues .pja-venue-card__name:hover { color: #2e7d32; }
+#klevents.jem_venues .pja-venue-card__addr {
+    font-size: .83rem; color: #6b7280; line-height: 1.5;
+}
+#klevents.jem_venues .pja-venue-card__footer {
+    margin-top: .5rem; display: flex; align-items: center; gap: .75rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CATEGORY DETAIL VIEW
+   ════════════════════════════════════════════════════════════════════════ */
+#klevents.jem_category .pja-cat-hero {
+    border-radius: 14px; overflow: hidden;
+    height: 200px; margin-bottom: 1.5rem;
+}
+#klevents.jem_category .pja-cat-hero img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+}
+#klevents.jem_category .pja-cat-description {
+    font-size: .95rem; color: #374151; line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Subcategory pills */
+#klevents.jem_category .pja-subcats {
+    display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem;
+}
+#klevents.jem_category .pja-subcat-pill {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .3rem .85rem;
+    background: #f0f4ff; border: 1px solid #c7d7f5;
+    border-radius: 20px; font-size: .82rem; font-weight: 600;
+    color: #3a5cbf; text-decoration: none; transition: all .15s;
+}
+#klevents.jem_category .pja-subcat-pill:hover {
+    background: #3a5cbf; border-color: #3a5cbf; color: #fff;
+}
+#klevents.jem_category .pja-subcat-count {
+    font-size: .72rem; opacity: .8;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CATEGORIES LIST VIEW
+   ════════════════════════════════════════════════════════════════════════ */
+#klevents.jem_categories .pja-cat-list-item {
+    background: #fff; border: 1px solid #e0e8f0;
+    border-radius: 14px; overflow: hidden;
+    margin-bottom: 1.25rem; transition: box-shadow .2s;
+}
+#klevents.jem_categories .pja-cat-list-item:hover {
+    box-shadow: 0 4px 20px rgba(26,46,90,.09);
+}
+#klevents.jem_categories .pja-cat-list-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid #f0f4f8;
+}
+#klevents.jem_categories .pja-cat-list-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem;
+}
+#klevents.jem_categories .pja-cat-list-title {
+    font-size: 1.05rem; font-weight: 700; color: #1a2e5a;
+    text-decoration: none; flex: 1;
+}
+#klevents.jem_categories .pja-cat-list-title:hover { color: #2e7d32; }
+#klevents.jem_categories .pja-cat-list-count {
+    font-size: .78rem; font-weight: 600; color: #6b7280;
+    background: #f0f4f8; padding: .2rem .6rem; border-radius: 20px;
+}
+#klevents.jem_categories .pja-cat-list-body { padding: 1rem 1.25rem; }
+#klevents.jem_categories .pja-cat-list-desc {
+    font-size: .88rem; color: #374151; line-height: 1.6; margin-bottom: .75rem;
+}
+#klevents.jem_categories .pja-cat-list-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .75rem 1.25rem;
+    border-top: 1px solid #f0f4f8;
+}
+#klevents.jem_categories .pja-show-all-btn {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .4rem .9rem;
+    background: #f0f9f0; border: 1px solid #c8e6c9;
+    border-radius: 20px; font-size: .8rem; font-weight: 700;
+    color: #2e7d32; text-decoration: none; transition: all .15s;
+}
+#klevents.jem_categories .pja-show-all-btn:hover {
+    background: #2e7d32; color: #fff; border-color: #2e7d32;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MY EVENTS / MY ATTENDANCES / MY VENUES
+   ════════════════════════════════════════════════════════════════════════ */
+#klevents.jem_myevents .pja-my-empty,
+#klevents.jem_myattendances .pja-my-empty,
+#klevents.jem_myvenues .pja-my-empty {
+    text-align: center; padding: 3.5rem 1rem;
+    border: 1px dashed #d1d5db; border-radius: 14px;
+    color: #9ca3af;
+}
+#klevents .pja-my-empty svg { opacity: .35; margin-bottom: 1rem; }
+#klevents .pja-my-empty p { font-size: .9rem; margin-bottom: 1.25rem; }
+
+/* My events table wrapper */
+#klevents.jem_myevents .pja-my-header,
+#klevents.jem_myattendances .pja-my-header,
+#klevents.jem_myvenues .pja-my-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+#klevents .pja-my-header h2 {
+    font-size: 1.25rem; font-weight: 800;
+    color: #1a2e5a; margin: 0;
+}
+
+/* ── Map embed ───────────────────────────────────────────────────────── */
+#klevents .klevents-map {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid #e0e8f0; margin-top: 1rem;
+}
+#klevents .klevents-map iframe,
+#klevents .klevents-map img { display: block; width: 100%; }
+
+/* ── iCal button (legacy) ────────────────────────────────────────────── */
+#klevents #iCal, #klevents .iCal { margin-top: 1.25rem; }
+
+/* ── Shared print styles ────────────────────────────────────────────── */
+@media print {
+    #klevents .pja-ev-actionbar,
+    #klevents .pja-btn-stack,
+    #klevents .pja-btn-green,
+    #klevents .pja-btn-outline,
+    #klevents #iCal,
+    #klevents .iCal,
+    #klevents .copyright { display: none !important; }
+
+    #klevents .pja-detail-layout { grid-template-columns: 1fr !important; }
+    #klevents .pja-info-panel {
+        position: static !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+    #klevents .pja-info-icon { display: none; }
+    #klevents .pja-info-row { margin-bottom: .5rem; }
+    #klevents .pja-info-label { color: #666; }
+    #klevents .pja-info-value { color: #000; }
+    #klevents table.eventtable { font-size: .8rem; }
+    #klevents table.eventtable thead th { background: #f0f0f0 !important; }
+    #klevents .pja-card { box-shadow: none !important; break-inside: avoid; }
+    #klevents a[href]::after { content: ' (' attr(href) ')'; font-size: .7rem; color: #666; }
+    #klevents a[href^="#"]::after,
+    #klevents a[href^="javascript"]::after { content: ''; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    #klevents .pja-detail-layout {
+        grid-template-columns: 1fr;
+    }
+    #klevents .pja-detail-layout .pja-info-panel {
+        position: static;
+        order: -1;
+    }
+}
+@media (max-width: 640px) {
+    #klevents .pja-card-grid {
+        grid-template-columns: 1fr;
+    }
+    #klevents.jem_venues .pja-venue-card {
+        flex-direction: column;
+    }
+    #klevents table.eventtable thead { display: none; }
+    #klevents table.eventtable tbody td {
+        display: block;
+        padding: .35rem 1rem;
+    }
+    #klevents table.eventtable tbody td:first-child { padding-top: .75rem; }
+    #klevents table.eventtable tbody td:last-child  { padding-bottom: .75rem; }
+    #klevents table.eventtable tbody tr { border-bottom: 1px solid #e0e8f0; }
+}

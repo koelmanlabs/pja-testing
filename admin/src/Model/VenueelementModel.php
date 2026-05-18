@@ -1,0 +1,144 @@
+<?php
+/**
+ * @package    Planjeagenda
+ * @copyright  (C) 2026 Koelman Labs
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+namespace KoelmanLabs\Component\Planjeagenda\Administrator\Model;
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Factory;
+use KoelmanLabs\Component\Planjeagenda\Administrator\Helper\PlanjeagendaHelper;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\Filter\InputFilter;
+
+class VenueelementModel extends BaseDatabaseModel
+{
+    /**
+     * data array
+     *
+     * @var array
+     */
+    protected $_data = null;
+
+    /**
+     * total
+     *
+     * @var integer
+     */
+    protected $_total = null;
+
+    /**
+     * Pagination object
+     *
+     * @var object
+     */
+    protected $_pagination = null;
+
+    /**
+     * id
+     *
+     * @var int
+     */
+    protected $_id = null;
+
+    /**
+     * Constructor
+     */
+/**
+     * Get venue-data
+     */
+    public function getData()
+    {
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_data))
+        {
+            $query         = $this->buildQuery();
+            $pagination = $this->getPagination();
+
+            $this->_data = $this->_getList($query, $pagination->limitstart, $pagination->limit);
+        }
+
+        return $this->_data;
+    }
+
+    /**
+     * venue-query
+     */
+    protected function buildQuery()
+    {
+        $app              = Factory::getApplication();
+        $jemsettings      = PlanjeagendaHelper::config();
+        $itemid           = $app->input->getInt('id', 0) . ':' . $app->input->getInt('Itemid', 0);
+
+        $filter_order     = $app->getUserStateFromRequest('com_planjeagenda.venueelement.'.$itemid.'.filter_order', 'filter_order', 'l.ordering', 'cmd' );
+        $filter_order_Dir = $app->getUserStateFromRequest('com_planjeagenda.venueelement.'.$itemid.'.filter_order_Dir', 'filter_order_Dir', '', 'word' );
+
+        $filter_order     = InputFilter::getinstance()->clean($filter_order, 'cmd');
+        $filter_order_Dir = InputFilter::getinstance()->clean($filter_order_Dir, 'word');
+
+        $filter_type      = $app->getUserStateFromRequest('com_planjeagenda.venueelement.'.$itemid.'.filter_type', 'filter_type', 0, 'int' );
+        $search           = $app->getUserStateFromRequest('com_planjeagenda.venueelement.'.$itemid.'.filter_search', 'filter_search', '', 'string' );
+        $search           = $this->_db->escape(trim(\Joomla\String\StringHelper::strtolower($search)));
+
+        // Query
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->select(array('l.id', 'l.state', 'l.color', 'l.city', 'l.country', 'l.published', 'l.venue', 'l.ordering'));
+        $query->from('#__pja_venues as l');
+
+        // where
+        $where = array();
+        $where[] = 'l.published = 1';
+
+        /* something to search for? (we like to search for "0" too) */
+        if ($search || ($search === "0")) {
+            switch ($filter_type) {
+                case 1: /* Search venues */
+                    $where[] = 'LOWER(l.venue) LIKE ' . $db->quote('%' . $search . '%');
+                    break;
+                case 2: // Search city
+                    $where[] = 'LOWER(l.city) LIKE ' . $db->quote('%' . $search . '%');
+                    break;
+                case 3: // Search state
+                    $where[] = 'LOWER(l.state) LIKE ' . $db->quote('%' . $search . '%');
+            }
+        }
+
+        $query->where($where);
+
+        $allowedCols = ['l.venue', 'l.city', 'l.state', 'l.country', 'l.ordering', 'l.id'];
+        $filter_order     = PlanjeagendaHelper::sanitizeOrderCol((string)$filter_order, $allowedCols, 'l.venue');
+        $filter_order_Dir = PlanjeagendaHelper::sanitizeOrderDir((string)$filter_order_Dir);
+        $query->order($filter_order . ' ' . $filter_order_Dir . ', l.ordering ASC');
+
+        return $query;
+    }
+
+    /**
+     * Method to get a pagination object
+     *
+     * @access public
+     * @return integer
+     */
+    public function getPagination()
+    {
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_pagination))
+        {
+            $limit      = $this->getState('limit');
+            $limitstart = $this->getState('limitstart');
+
+            $query = $this->buildQuery();
+            $total = $this->_getListCount($query);
+
+            // Create the pagination object
+            $this->_pagination = new Pagination($total, $limitstart, $limit);
+        }
+
+        return $this->_pagination;
+    }
+}

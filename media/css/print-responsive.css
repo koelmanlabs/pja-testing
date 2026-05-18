@@ -1,0 +1,90 @@
+@charset "ISO-8859-1";
+/**
+ * @package    JEM
+ * @copyright  (C) 2013-2026 joomlaeventmanager.net
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+#main a:link, #main a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+div#jem {
+    border: 0px;
+}
+
+div#jem h2 {
+    border: none;
+}
+
+div#jem .flyerimage {
+    border: none !important;
+}
+
+a[href]:after {
+    content: none !important;
+}
+
+div#jem #jem_filter {
+    background-color: transparent;
+    float:right;
+}
+
+div#jem #jem_filter div.jem-limit-smallist {
+    display:block;
+}
+
+div#jem #jem_filter div, div#jem #jem_filter div label  {
+    display: none;
+}
+
+div#jem a {
+    text-decoration: none !important;
+}
+
+#jem .eventlist li {
+    padding: 10px 0;
+    list-style: none;
+    background-color: #fff !important;
+    break-inside: avoid !important;
+}
+
+#jem .jem-event {
+    cursor: pointer;
+    border-left: none;
+    border-right: none;
+}
+
+@media print {
+
+    div#jem .buttons {
+        display: none;
+    }
+
+    a[href]:after {
+        content: none !important;
+    }
+
+    abbr[title]:after {
+        content: none;
+    }
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: none;
+    }
+
+    a:link:after, a:visited:after {
+        content: none;
+    }
+
+    div#jem .flyerimage {
+        border: none;
+    }
+
+    div#jem #jem_filter {
+    display: none;
+    }
+}

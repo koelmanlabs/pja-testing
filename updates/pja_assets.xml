@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+    <update>
+        <name>Planjeagenda Local Assets</name>
+        <description>Serves FullCalendar, FilePond and FontAwesome locally.</description>
+        <element>pja_assets</element>
+        <type>plugin</type>
+        <folder>system</folder>
+        <version>1.1.0</version>
+        <infourl title="Planjeagenda Releases">https://github.com/koelmanlabs/planjeagenda/releases</infourl>
+        <downloads>
+            <downloadurl type="full" format="zip">https://github.com/koelmanlabs/planjeagenda/releases/download/v1.1.0/plg_system_pja_assets.zip</downloadurl>
+        </downloads>
+        <tags>
+            <tag>stable</tag>
+        </tags>
+        <maintainer>Koelman Labs</maintainer>
+        <maintainerurl>https://github.com/koelmanlabs/planjeagenda</maintainerurl>
+        <targetplatform name="joomla" version="6.0"/>
+        <php_minimum>8.2</php_minimum>
+    </update>
+</updates>

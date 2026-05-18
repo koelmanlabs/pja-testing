@@ -1,0 +1,34 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Language\Text;
+
+//$max_custom_fields = $this->settings->get('global_editvenue_maxnumcustomfields', -1); // default to All
+?>
+
+<fieldset>
+    <legend><?php echo \Text::_('com_planjeagenda_EDITVENUE_PUBLISHING_LEGEND'); ?></legend>
+    <ul class="adminformlist">
+        <li><?php echo $this->form->getLabel('published'); ?><?php echo $this->form->getInput('published'); ?></li>
+        <li><?php echo $this->form->getLabel('access'); ?><?php echo $this->form->getInput('access'); ?></li>
+    </ul>
+</fieldset>
+<!-- META -->
+<fieldset class="">
+    <legend><?php echo \Text::_('com_planjeagenda_META_HANDLING'); ?></legend>
+    <input type="button" class="button" value="<?php echo \Text::_('com_planjeagenda_ADD_VENUE_CITY'); ?>" onclick="meta()" />
+    <?php foreach ($this->form->getFieldset('meta') as $field) : ?>
+        <div class="control-group">
+            <div class="control-label"><?php echo $field->label; ?></div>
+            <div class="controls"><?php echo $field->input; ?></div>
+        </div>
+    <?php endforeach; ?>
+</fieldset>
+

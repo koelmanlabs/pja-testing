@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_DAY_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_DAY_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="days" type="text"
+                default="0"
+                size="2"
+                label="com_planjeagenda_DAYS_FIELD"
+                description="com_planjeagenda_DAYS_FIELD_DESC"
+            />
+
+<field name="onlyfeatured" type="radio"
+                default="0"
+                label="com_planjeagenda_DISPLAY_FEATUREDONLY"
+                description="com_planjeagenda_DISPLAY_FEATUREDONLY_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+          <field type="spacer" name="spacer1" hr="true" />
+          <field name="introtext" type="editor"
+                    filter="safehtml"
+                    hide="readmore,pagebreak,module,menu,fields,contact,article"
+                    default=""
+                    rows="8"
+                    cols="30"
+                    height="300px"
+                    label="com_planjeagenda_INTROTEXT_FIELD"
+                    description="com_planjeagenda_INTROTEXT_FIELD_DESC"
+                />
+                <field name="showintrotext" type="radio"
+                    default="0"
+                    label="com_planjeagenda_DISPLAY_INTROTEXT"
+                    description="com_planjeagenda_DISPLAY_INTROTEXT_DESC"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field type="spacer" name="spacer2" hr="true" />
+                <field name="categoryswitch" type="radio"
+                    default="0"
+                    label="com_planjeagenda_CATEGORYSWITCH"
+                    description="com_planjeagenda_CATEGORYSWITCH_DESC"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">com_planjeagenda_INCLUDE</option>
+                    <option value="0">com_planjeagenda_EXCLUDE</option>
+                </field>
+                <field name="categoryswitchcats" type="text"
+                    default=""
+                    label="com_planjeagenda_CATEGORYSWITCHCATS"
+                    description="com_planjeagenda_CATEGORYSWITCHCATS_DESC"
+                />
+
+                <field type="spacer" name="spacer3" hr="true" />
+                <field name="footertext" type="editor"
+                    filter="safehtml"
+                    hide="readmore,pagebreak,module,menu,fields,contact,article"
+                    default=""
+                    rows="8"
+                    cols="30"
+                    height="300px"
+                    label="com_planjeagenda_GLOBAL_FIELD_FOOTERTEXT"
+                    description="com_planjeagenda_GLOBAL_FIELD_FOOTERTEXT_DESC"
+                />
+                <field name="showfootertext" type="radio"
+                    default="0"
+                    label="com_planjeagenda_GLOBAL_FIELD_SHOW_FOOTERTEXT"
+                    description="com_planjeagenda_GLOBAL_FIELD_SHOW_FOOTERTEXT_DESC"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+        </fieldset>
+    </fields>
+</metadata>

@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+    <fieldset name="details" addfieldprefix="KoelmanLabs\Component\Planjeagenda\Administrator\Field">
+        <field name="articletext" type="editor"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_FIELD_ARTICLETEXT_LABEL"
+            description="com_planjeagenda_EVENT_FIELD_ARTICLETEXT_DESC"
+            filter="\Joomla\CMS\Component\ComponentHelper::filterText"
+            hide="pagebreak"
+        />
+        <field name="featured" type="radio"
+            label="JFEATURED"
+            description="com_planjeagenda_EVENT_FIELD_FEATURED_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="access" type="accesslevel"
+            label="JFIELD_ACCESS_LABEL"
+            description="JFIELD_ACCESS_DESC"
+            class="inputbox"
+            size="1"
+        />
+        <field name="title" type="text"
+            class="inputbox"
+            size="40"
+            label="com_planjeagenda_EVENT_TITLE"
+            description="com_planjeagenda_EVENT_TITLE"
+            required="true"
+        />
+        <field name="alias" type="text"
+            class="inputbox"
+            size="40"
+            label="com_planjeagenda_ALIAS"
+            description="com_planjeagenda_ALIAS"
+            required="false"
+            hint="JFIELD_ALIAS_PLACEHOLDER"
+        />
+        <field name="datdescription" type="editor"
+            hide="pagebreak,readmore"
+            class="inputbox"
+            rows="3" cols="40"
+            label="com_planjeagenda_EVENT_DESCRIPTION"
+            description="com_planjeagenda_EVENT_DESCRIPTION_DESC"
+            filter="\Joomla\CMS\Component\ComponentHelper::filterText"
+        />
+        <field name="dates" type="calendarjem"
+            label="com_planjeagenda_STARTDATE"
+            description="com_planjeagenda_STARTDATE"
+            class="inputbox"
+            size="22"
+            format="%Y-%m-%d"
+            translateformat="true"
+            filter="string"
+            showtime="false"
+        />
+        <field name="enddates" type="calendarjem"
+            label="com_planjeagenda_ENDDATE"
+            description="com_planjeagenda_ENDDATE"
+            class="inputbox"
+            size="22"
+            format="%Y-%m-%d"
+            translateformat="true"
+            filter="string"
+            showtime="false"
+        />
+        <field name="times" type="starttime"
+            class="inputbox"
+            size="10"
+            label="com_planjeagenda_STARTTIME"
+            description="com_planjeagenda_STARTTIME_DESC"
+            required="false"
+        />
+        <field name="endtimes" type="endtime"
+            class="inputbox"
+            size="10"
+            label="com_planjeagenda_ENDTIME"
+            description="com_planjeagenda_ENDTIME_DESC"
+            required="false"
+        />
+        <field name="cats" type="catoptions"
+            multiple="true"
+            class="inputbox required form-select"
+            size="4"
+            label="com_planjeagenda_FIELD_CATEGORIES"
+            labelclass=""
+            description="com_planjeagenda_FIELD_CATEGORIES_DESC"
+            required="true"
+            default=""
+        />
+        <field 
+    name="municipality_id" 
+    type="sql" 
+    label="COM_PLANJEAGENDA_FIELD_MUNICIPALITY_LABEL"
+    query="SELECT id AS value, title AS text FROM #__pja_municipalities WHERE published = 1 ORDER BY title ASC"
+    key_field="value"
+    value_field="text"
+    required="true"
+>
+    <option value="0">COM_PLANJEAGENDA_SELECT_MUNICIPALITY</option>
+</field>
+        <field name="hits" type="hits"
+            default="0"
+            label="com_planjeagenda_EVENT_FIELD_HITS_LABEL"
+            description="com_planjeagenda_EVENT_FIELD_HITS_DESC"
+        />
+    </fieldset>
+
+    <fieldset name="publish">
+        <field name="id" type="text"
+            default="0"
+            readonly="true"
+            class="readonly"
+            label="JGLOBAL_FIELD_ID_LABEL"
+            description="JGLOBAL_FIELD_ID_DESC"
+        />
+        <field name="created" type="calendar"
+            class="readonly"
+            label="JGLOBAL_FIELD_CREATED_LABEL"
+            description="JGLOBAL_FIELD_CREATED_DESC"
+            size="22"
+            default="now"
+            readonly="true"
+            format="%Y-%m-%d %H:%M:%S"
+            translateformat="true"
+            filter="user_utc"
+            showtime="true"
+            filterformat="%Y-%m-%d %H:%M:%S"
+        />
+        <field name="modified" type="calendar"
+            class="readonly"
+            label="JGLOBAL_FIELD_MODIFIED_LABEL"
+            description="com_planjeagenda_EDITED_AT"
+            size="22"
+            readonly="true"
+            format="%Y-%m-%d %H:%M:%S"
+            translateformat="true"
+            filter="user_utc"
+            showtime="true"
+            filterformat="%Y-%m-%d %H:%M:%S"
+        />
+        <field name="version" type="text"
+            default="0"
+            readonly="true"
+            class="readonly"
+            label="com_planjeagenda_REVISED"
+            description="com_planjeagenda_REVISED"
+        />
+        <field name="created_by" type="user"
+            label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+            description="JGLOBAL_FIELD_CREATED_BY_Desc"
+        />
+        <field name="created_by_alias" type="text"
+            label="com_planjeagenda_FIELD_CREATED_BY_ALIAS_LABEL"
+            description="com_planjeagenda_FIELD_CREATED_BY_ALIAS_DESC"
+            class="inputbox"
+            size="20"
+    />
+        <field name="published" type="list"
+            label="JSTATUS"
+            description="JFIELD_PUBLISHED_DESC"
+            class="inputbox"
+            size="1"
+            default="1"
+        >
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
+        </field>
+        <field name="publish_up" type="calendar"
+            label="JGLOBAL_FIELD_PUBLISH_UP_LABEL"
+            description="JGLOBAL_FIELD_PUBLISH_UP_DESC"
+            size="22"
+            default="now"
+            format="%Y-%m-%d %H:%M:%S"
+            translateformat="true"
+            filter="user_utc"
+            showtime="true"
+            filterformat="%Y-%m-%d %H:%M:%S"
+        />
+        <field name="publish_down" type="calendar"
+            label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL"
+            description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
+            size="22"
+            format="%Y-%m-%d %H:%M:%S"
+            translateformat="true"
+            filter="user_utc"
+            showtime="true"
+            filterformat="%Y-%m-%d %H:%M:%S"
+        />
+    </fieldset>
+
+    <fieldset name="request"
+              addfieldprefix="KoelmanLabs\Component\Planjeagenda\Administrator\Field"
+    >
+        <field name="locid" type="modal_venue"
+            label="com_planjeagenda_VENUE"
+            description="com_planjeagenda_SELECTVENUE_DESC"
+            size="40"
+            required="false"
+            default="0"
+        />
+        <field name="contactid" type="modal_contact"
+            label="com_planjeagenda_CONTACT"
+            description="com_planjeagenda_CONTACT_DESC"
+            size="40"
+            required="false"
+            default="0"
+        />
+    </fieldset>
+
+    <fieldset name="image"
+              label="com_planjeagenda_IMAGE"
+    >
+        <field name="datimage" type="imageselect"
+            class="inputbox"
+            size="40"
+            label="com_planjeagenda_IMAGESELECT"
+            imagetype="events"
+            description="com_planjeagenda_IMAGESELECT"
+        />
+    </fieldset>
+
+    <fieldset name="custom">
+        <field name="custom1" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD1"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD1_DESC"
+        />
+        <field name="custom2" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD2"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD2_DESC"
+        />
+        <field name="custom3" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD3"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD3_DESC"
+        />
+        <field name="custom4" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD4"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD4_DESC"
+        />
+        <field name="custom5" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD5"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD5_DESC"
+        />
+        <field name="custom6" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD6"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD6_DESC"
+        />
+        <field name="custom7" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD7"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD7_DESC"
+        />
+        <field name="custom8" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD8"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD8_DESC"
+        />
+        <field name="custom9" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD9"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD9_DESC"
+        />
+        <field name="custom10" type="text"
+            size="20"
+            readonly="false"
+            class="inputbox"
+            label="com_planjeagenda_EVENT_CUSTOM_FIELD10"
+            description="com_planjeagenda_EVENT_CUSTOM_FIELD10_DESC"
+        />
+    </fieldset>
+
+    <fieldset name="registration">
+        <field name="registra" type="list"
+            label="com_planjeagenda_EVENT_FIELD_ENABLE_REGISTRATION"
+            description="com_planjeagenda_EVENT_FIELD_ENABLE_REGISTRATION_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+            <option value="2">com_planjeagenda_EVENT_FIELD_FROM</option>
+        </field>
+        <field name="registra_from" type="calendar"
+            label="com_planjeagenda_EVENT_FIELD_REGISTRATION_FROM"
+            description="com_planjeagenda_EVENT_FIELD_REGISTRATION_FROM_DESC"
+            class="input-medium"
+            default="now"
+            filter="user_utc"
+            format="%Y-%m-%d %H:%M:%S"
+            filterformat="Y-m-d H:i:s"
+            singleheader="true"
+            showtime="true"
+            timeformat="24"
+            todaybutton="true"
+            weeknumbers="true"
+            filltable="true"
+            showon="registra:2"
+        />
+
+        <field name="registra_until" type="calendar"
+            label="com_planjeagenda_EVENT_FIELD_REGISTRATION_UNTIL"
+            description="com_planjeagenda_EVENT_FIELD_REGISTRATION_UNTIL_DESC"
+            class="input-medium"
+            filter="user_utc"
+            format="%Y-%m-%d %H:%M:%S"
+            filterformat="Y-m-d H:i:s"
+            singleheader="true"
+            showtime="true"
+            timeformat="24"
+            todaybutton="true"
+            weeknumbers="true"
+            filltable="true"
+            showon="registra:2"
+        />
+        <field name="reginvitedonly" type="checkbox"
+            class="inputbox"
+            label="com_planjeagenda_EDITEVENT_FIELD_REG_INVITED_ONLY"
+            description="com_planjeagenda_EDITEVENT_FIELD_REG_INVITED_ONLY_DESC"
+            checked="0"
+        />
+        <field name="unregistra" type="list"
+            label="com_planjeagenda_EVENT_FIELD_ENABLE_ANNULATION"
+            description="com_planjeagenda_EVENT_FIELD_ENABLE_ANNULATION_DESC"
+            class="inputbox"
+            default="0"
+            required="false"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+            <option value="2">com_planjeagenda_EVENT_FIELD_UNTIL</option>
+        </field>
+        <field name="unregistra_until" type="calendar"
+            label="com_planjeagenda_EVENT_FIELD_ANNULATION_UNTIL"
+            description="com_planjeagenda_EVENT_FIELD_ANNULATION_UNTIL_DESC"
+            class="input-medium"
+            filter="user_utc"
+            format="%Y-%m-%d %H:%M:%S"
+            filterformat="Y-m-d H:i:s"
+            singleheader="true"
+            showtime="true"
+            timeformat="24"
+            todaybutton="true"
+            weeknumbers="true"
+            filltable="true"
+            showon="unregistra:2"
+        />
+        <field name="maxplaces" type="number"
+            size="4"
+            class="inputbox"
+            label="com_planjeagenda_MAX_PLACES"
+            description="com_planjeagenda_MAX_PLACES_DESC"
+            filter="integer"
+            default="0"
+            min="0"
+        />
+        <field name="minbookeduser" type="number"
+            size="4"
+            class="inputbox"
+            label="com_planjeagenda_MINIMUM_BOOKED_PLACES_PER_USER"
+            description="com_planjeagenda_MINIMUM_BOOKED_PLACES_PER_USER_DESC"
+            filter="integer"
+            default="1"
+            min="1"
+        />
+        <field name="maxbookeduser" type="number"
+            size="4"
+            class="inputbox"
+            label="com_planjeagenda_MAXIMUM_BOOKED_PLACES_PER_USER"
+            description="com_planjeagenda_MAXIMUM_BOOKED_PLACES_PER_USER_DESC"
+            filter="integer"
+            default="1"
+            min="1"
+        />
+        <field name="reservedplaces" type="number"
+            size="4"
+            class="inputbox"
+            label="com_planjeagenda_RESERVED_PLACES"
+            description="com_planjeagenda_RESERVED_PLACES_DESC"
+            filter="integer"
+            default="0"
+            min="0"
+        />
+        <field name="invited" type="modal_users"
+            label="com_planjeagenda_EDITEVENT_FIELD_INVITED_USERS"
+            description="com_planjeagenda_EDITEVENT_FIELD_INVITED_USERS_DESC"
+            size="4"
+            required="false"
+        />
+        <field name="avplaces" type="text"
+            size="4"
+            class="readonly"
+            readonly="true"
+            disabled="true"
+            label="com_planjeagenda_AVAILABLE_PLACES"
+            description="com_planjeagenda_AVAILABLE_PLACES_DESC"
+        />
+        <field name="waitinglist" type="checkbox"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_ENABLE_WAITINGLIST"
+            description="com_planjeagenda_ENABLE_WAITINGLIST_DESC"
+            value="1"
+            checked="0"
+        />
+        <field name="requestanswer" type="checkbox"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_REQUEST_ANSWER_ASSISTENCE"
+            description="com_planjeagenda_REQUEST_ANSWER_ASSISTENCE_DESC"
+            value="1"
+            checked="0"
+        />
+        <field name="seriesbooking" type="checkbox"
+            size="1"
+            class="inputbox"
+            label="com_planjeagenda_EDITEVENT_FIELD_SERIES_EVENT_BOOKING"
+            description="com_planjeagenda_EDITEVENT_FIELD_SERIES_EVENT_BOOKING_DESC"
+            value="1"
+            checked="0"
+        />
+        <field name="singlebooking" type="checkbox"
+            size="1"
+            class="inputbox"
+            label="com_planjeagenda_EDITEVENT_FIELD_SINGLE_EVENT_BOOKING"
+            description="com_planjeagenda_EDITEVENT_FIELD_SINGLE_EVENT_BOOKING_DESC"
+            value="1"
+            checked="0"
+        />
+    </fieldset>
+
+    <fieldset name="recurrence"
+              label="com_planjeagenda_RECURRING_EVENTS"
+    >
+        <field name="recurrence_type" type="list"
+            default="0"
+            label="com_planjeagenda_RECURRENCE"
+            description="com_planjeagenda_RECURRENCE"
+        >
+            <option value="0">com_planjeagenda_NOTHING</option>
+            <option value="1">com_planjeagenda_DAILY</option>
+            <option value="2">com_planjeagenda_WEEKLY</option>
+            <option value="3">com_planjeagenda_MONTHLY</option>
+            <option value="4">com_planjeagenda_WEEKDAY</option>
+            <option value="5">com_planjeagenda_YEARLY</option>
+            <option value="6">com_planjeagenda_LASTDAY</option>
+        </field>
+        <field name="recurrence_limit_date" type="calendarjem"
+            default="now"
+            label="com_planjeagenda_RECURRENCE_COUNTER"
+            description="com_planjeagenda_RECURRENCE_COUNTER_DESC"
+            class="inputbox"
+            size="22"
+            format="%Y-%m-%d"
+            translateformat="true"
+            filter="string"
+            showtime="false"
+        />
+    </fieldset>
+
+    <fieldset name="meta"
+              label="JGLOBAL_FIELDSET_METADATA_OPTIONS"
+    >
+        <field name="meta_keywords" type="textarea"
+            id="meta_keywordsOR"
+            label="JFIELD_META_KEYWORDS_LABEL"
+            description="JFIELD_META_KEYWORDS_DESC"
+            class="inputbox"
+            rows="3" cols="30"
+        />
+        <field name="meta_description" type="textarea"
+            id="meta_descriptionOR"
+            label="JFIELD_META_DESCRIPTION_LABEL"
+            description="JFIELD_META_DESCRIPTION_DESC"
+            class="inputbox"
+            rows="3" cols="30"
+        />
+    </fieldset>
+
+    <fields name="attribs">
+        <fieldset name="basic"
+                  label="com_planjeagenda_EVENT_FIELDSET_ATTRIBS_LABEL"
+        >
+            <field name="event_show_venue_name" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_VENUE_NAME_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_VENUE_NAME_DESC"
+                default=""
+                class="inputbox btn-group btn-group-yesno"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="1">JSHOW</option>
+                <option    value="0">JHIDE</option>
+            </field>
+            <field name="event_show_category" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_CATEGORY_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_CATEGORY_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="1">JSHOW</option>
+                <option    value="0">JHIDE</option>
+            </field>
+            <field name="event_link_category" type="list"
+                label="com_planjeagenda_EVENT_FIELD_LINK_CATEGORY_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_CATEGORY_DESC"
+                class="inputbox btn-group btn-group-yesno"
+                default=""
+                showon="event_show_category:1"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="1">JYES</option>
+                <option    value="0">JNO</option>
+            </field>
+            <field name="event_show_author" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_AUTHOR_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_AUTHOR_DESC"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_link_author" type="list"
+                label="com_planjeagenda_EVENT_FIELD_LINK_AUTHOR_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_AUTHOR_DESC"
+                default=""
+                showon="event_show_author:1"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JNO</option>
+                <option    value="1">JYES</option>
+            </field>
+            <field name="event_show_contact" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_CONTACT_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_CONTACT_DESC"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_link_contact" type="list"
+                label="com_planjeagenda_EVENT_FIELD_LINK_CONTACT_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_LINK_CONTACT_DESC"
+                default=""
+                showon="event_show_contact:1"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JNO</option>
+                <option    value="1">JYES</option>
+            </field>
+            <field name="event_show_hits" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_HITS_LABEL"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_HITS_DESC"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_show_print_icon" type="list"
+                label="JGLOBAL_SHOW_PRINT_ICON_LABEL"
+                description="JGLOBAL_SHOW_PRINT_ICON_LABEL_DESC"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_show_email_icon" type="list"
+                label="JGLOBAL_SHOW_EMAIL_ICON_LABEL"
+                description="JGLOBAL_SHOW_EMAIL_ICON_LABEL_DESC"
+                default=""
+            >
+                <option    value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_show_ical_icon" type="list"
+                label="com_planjeagenda_EVENT_FIELD_SHOW_ICAL_ICON"
+                description="com_planjeagenda_EVENT_FIELD_SHOW_ICAL_ICON_DESC"
+                default=""
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option    value="0">JHIDE</option>
+                <option    value="1">JSHOW</option>
+            </field>
+            <field name="event_show_detailstitle" type="list"
+                label="com_planjeagenda_DISPLAY_EVENT_TITLE"
+                description="com_planjeagenda_DISPLAY_EVENT_TITLE_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="evvenues"
+                  label="com_planjeagenda_VENUES"
+        >
+            <field name="event_show_locdescription" type="list"
+                label="com_planjeagenda_DISPLAY_VENUE_DESCRIPT"
+                description="com_planjeagenda_DISPLAY_VENUE_DESCRIPT_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="event_show_detailsadress" type="list"
+                label="com_planjeagenda_DISPLAY_ADDRESS"
+                description="com_planjeagenda_DISPLAY_ADDRESS_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="event_show_detlinkvenue" type="list"
+                label="com_planjeagenda_DISPLAY_ADDRESS"
+                description="com_planjeagenda_DISPLAY_ADDRESS_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">com_planjeagenda_NO_LINK</option>
+                <option value="1">com_planjeagenda_LINK_TO_URL</option>
+                <option value="2">com_planjeagenda_LINK_TO_VENUEVIEW</option>
+            </field>
+            <field name="event_show_mapserv" type="list"
+                label="com_planjeagenda_DISPLAY_LINK_TO_MAP"
+                description="com_planjeagenda_DISPLAY_LINK_TO_MAP_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">com_planjeagenda_NO_MAP_SERVICE</option>
+                <option value="1">com_planjeagenda_GOOGLE_MAP_LINK</option>
+                <option value="2">com_planjeagenda_GOOGLE_MAP_DISP</option>
+                <option value="3">com_planjeagenda_GOOGLE_MAP_DISP_API</option>
+                <option value="4">com_planjeagenda_OSM_MAP_LINK</option>
+                <option value="5">com_planjeagenda_OSM_MAP_DISP</option>
+            </field>
+            <field name="event_tld" type="text"
+                label="com_planjeagenda_GOOGLE_MAP_TLD"
+                description="com_planjeagenda_GOOGLE_MAP_TLD_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="event_show_mapserv:1,2,3"
+            />
+            <field name="event_lg" type="text"
+                label="com_planjeagenda_GOOGLE_MAP_LG"
+                description="com_planjeagenda_GOOGLE_MAP_LG_DESC"
+                class="inputbox"
+                size="10"
+                maxlength="10"
+                required="false"
+                showon="event_show_mapserv:1,2,3"
+            />
+        </fieldset>
+        <fieldset name="evregistration"
+                  label="com_planjeagenda_REGISTRATION"
+        >
+            <field name="event_comunsolution" type="list"
+                label="com_planjeagenda_COM_SOL"
+                description="com_planjeagenda_COM_SOL_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">com_planjeagenda_DONT_USE_COM_SOL</option>
+                <option value="1">com_planjeagenda_COMBUILDER</option>
+            </field>
+            <field name="event_comunoption" type="list"
+                label="com_planjeagenda_TYPE_COM_INTEGRATION"
+                description="com_planjeagenda_TYPE_COM_INTEGRATION_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">com_planjeagenda_LINK_PROFILE</option>
+                <option value="1">com_planjeagenda_LINK_AVATAR</option>
+            </field>
+        </fieldset>
+        <fieldset name="evevents"
+                  label="com_planjeagenda_EVENTS"
+        >
+            <field name="event_show_description" type="list"
+                label="com_planjeagenda_DISPLAY_EVENT_DESCRIPT"
+                description="com_planjeagenda_DISPLAY_EVENT_DESCRIPT_DESC"
+                class="inputbox"
+                default=""
+                required="false"
+            >
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+        
+        <field
+            name="tags"
+            type="tag"
+            label="JTAG"
+            description="JFIELD_TAGS_DESC"
+            multiple="true"
+            mode="nested"
+            class="inputbox"
+            published="1"
+        />
+        </fieldset>
+    </fields>
+    <fields name="metadata">
+        <field name="robots" type="list"
+            label="JFIELD_METADATA_ROBOTS_LABEL"
+            description="JFIELD_METADATA_ROBOTS_DESC"
+            default=""
+        >
+            <option value="">JGLOBAL_USE_GLOBAL</option>
+            <option value="index, follow">com_planjeagenda_INDEX_FOLLOW</option>
+            <option value="noindex, follow">com_planjeagenda_NOINDEX_FOLLOW</option>
+            <option value="index, nofollow">com_planjeagenda_INDEX_NOFOLLOW</option>
+            <option value="noindex, nofollow">com_planjeagenda_NOINDEX_NOFOLLOW</option>
+        </field>
+        <field name="author" type="text"
+            label="JAUTHOR"
+            description="JFIELD_METADATA_AUTHOR_DESC"
+            size="20" />
+        <field name="rights" type="textarea"
+            label="JFIELD_META_RIGHTS_LABEL"
+            description="JFIELD_META_RIGHTS_DESC"
+            required="false"
+            filter="string"
+            cols="30" rows="2" />
+    </fields>
+    	<fieldset>
+
+		<field
+			name="asset_id"
+			type="hidden"
+		/>
+
+	</fieldset>
+</form>

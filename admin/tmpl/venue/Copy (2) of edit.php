@@ -1,0 +1,549 @@
+<?php
+defined('_JEXEC') or die;
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+
+// Essentiële Joomla scripts
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('bootstrap.tab'); // Belangrijk voor de werking van de tabs!
+
+$attachments = $this->attachments ?? [];
+
+// Instellingen die je later makkelijk kunt aanpassen (of uit een config-bestand kunt halen)
+$dzConfig = [
+    'max_width'   => 1200, // Maximale breedte in pixels
+    'quality'     => 0.8,    // Kwaliteit (0.1 tot 1.0)
+    'max_files'   => 10,     // Maximaal aantal bestanden
+    'accepted'    => 'image/*', // Welke bestanden zijn toegestaan
+    'parallel'    => 5       // Hoeveel tegelijk verwerken
+];
+?>
+<style>
+    /* Dropzone Box Styling */
+    .dropzone { border: 2px dashed #007bff; background: #f8f9fa; border-radius: 5px; min-height: 150px; }
+    .dropzone .dz-message { font-weight: 400; color: #666; margin: 2em 0; }
+    
+    /* Fix voor missende icons/thumbnails */
+    .dropzone .dz-preview .dz-image img { width: 100%; height: auto; }
+    .dropzone .dz-preview .dz-remove { color: #dc3545; text-decoration: none; font-weight: bold; margin-top: 10px; display: block; }
+    
+    /* Algemene icon fix voor Joomla 4/5 */
+    [class^="icon-"], [class*=" icon-"] { font-family: "Font Awesome 5 Free", "Font Awesome 6 Free", "icomoon"; font-weight: 900; }
+
+
+/* De container van de preview */
+    .dropzone .dz-preview {
+        margin: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        background: #fdfdfd; /* De achtergrond van het hele kaartje */
+    }
+
+    /* De bestandsnaam boven het plaatje */
+    .dropzone .dz-preview .dz-details {
+        background-color: #333 !important; /* Maak de achtergrond donker */
+        color: #fff !important;            /* Tekst wit voor contrast */
+        opacity: 0.9;
+        padding: 5px !important;
+        border-radius: 4px;
+        font-size: 11px;
+    }
+
+    /* Zorg dat de naam niet over het plaatje heen valt (indien gewenst) */
+    .dropzone .dz-preview .dz-details .dz-filename {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Het plaatje zelf binnen de preview */
+    .dropzone .dz-preview .dz-image {
+        border-radius: 4px !important;
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    /* Verwijder-link styling */
+    .dropzone .dz-preview .dz-remove {
+        color: #dc3545 !important;
+        font-size: 12px;
+        text-decoration: none;
+        margin-top: 5px;
+        display: block;
+        font-weight: bold;
+    }
+    
+    .dropzone .dz-preview .dz-remove:hover {
+        text-decoration: underline;
+    }
+/* 1. Zorg dat de preview container hoog genoeg is voor tekst onder de afbeelding */
+    .dropzone .dz-preview {
+        margin: 15px;
+        min-height: 180px; /* Extra ruimte voor tekst onderaan */
+        background: #fff !important;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* 2. De afbeelding container */
+    .dropzone .dz-preview .dz-image {
+        border-radius: 4px !important;
+        width: 120px !important;
+        height: 120px !important;
+        margin-bottom: 40px; /* Creëer ruimte voor de tekst die we naar beneden duwen */
+        z-index: 1;
+    }
+
+    /* 3. De details (Naam en Grootte) naar beneden verplaatsen */
+    .dropzone .dz-preview .dz-details {
+        position: absolute;
+        top: 130px !important; /* Plaats het net onder de 120px hoge afbeelding */
+        left: 0;
+        width: 100%;
+        background: transparent !important; /* Weg met die zwarte balk */
+        color: #333 !important;            /* Donkere tekst op witte achtergrond */
+        opacity: 1 !important;             /* Altijd zichtbaar, niet alleen bij hover */
+        padding: 0 5px !important;
+        text-align: center;
+        line-height: 1.2;
+        transition: none !important;
+    }
+
+    /* 4. Specifieke styling voor de bestandsnaam */
+    .dropzone .dz-preview .dz-details .dz-filename {
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .dropzone .dz-preview .dz-details .dz-filename span {
+        border: none !important;
+        background: transparent !important;
+        font-weight: bold;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    /* 5. De bestandsgrootte */
+    .dropzone .dz-preview .dz-details .dz-size {
+        font-size: 10px;
+        color: #777;
+        margin-bottom: 0 !important;
+    }
+
+    /* 6. Verwijderknop ("Remove file") netjes onderaan plaatsen */
+    .dropzone .dz-preview .dz-remove {
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: #d9534f !important;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: bold;
+        z-index: 10;
+    }
+
+    /* Verberg de vinkjes en errors die soms over de tekst heen vallen op hover */
+    .dropzone .dz-preview .dz-success-mark, 
+    .dropzone .dz-preview .dz-error-mark {
+        top: 30% !important;
+    }
+    
+    /* 1. Verberg de progress-balk volledig (omdat we Base64 gebruiken is hij direct 100%) */
+    .dropzone .dz-preview .dz-progress {
+        display: none !important;
+    }
+
+    /* 2. Mocht je hem toch willen zien, gebruik dan deze styling in plaats van 'display: none': */
+    /*
+    .dropzone .dz-preview .dz-progress {
+        top: 125px !important; 
+        left: 5% !important;
+        width: 90% !important;
+        height: 5px !important;
+        background: rgba(0,0,0,0.1) !important;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .dropzone .dz-preview .dz-progress .dz-upload {
+        background: #28a745 !important;
+    }
+    */
+
+    /* 3. Zorg dat de afbeelding niet lichter wordt (opacity) bij het laden */
+    .dropzone .dz-preview.dz-processing .dz-image img {
+        opacity: 1 !important;
+        filter: none !important;
+    }
+
+    /* 4. Fix voor de vinkjes (success/error marks) die ook over het plaatje kunnen zweven */
+    .dropzone .dz-preview .dz-success-mark, 
+    .dropzone .dz-preview .dz-error-mark {
+        display: none !important; /* Verberg deze, ze staan vaak lelijk in de weg */
+    }
+
+/* 1. Voorkom dat de afbeelding lichter wordt als je eroverheen gaat (hover) */
+    .dropzone .dz-preview:hover .dz-image img {
+        transform: none !important; /* Voorkom inzoomen/schalen */
+        filter: none !important;    /* Voorkom blur of kleurverandering */
+        opacity: 1 !important;      /* Houd het plaatje 100% zichtbaar */
+    }
+
+    /* 2. Verwijder de zwarte overlay die Dropzone standaard over het plaatje tekent op hover */
+    .dropzone .dz-preview .dz-image:hover {
+        background: transparent !important;
+    }
+
+    /* 3. Zorg dat de afbeelding container zelf niet van kleur verandert */
+    .dropzone .dz-preview:hover .dz-image {
+        background: transparent !important;
+    }
+
+    /* 4. Als je juist een subtiel effect wilt in plaats van faden, 
+       kun je een dun randje toevoegen als visuele feedback: */
+    .dropzone .dz-preview:hover {
+        border-color: #007bff !important; /* Blauw randje om het hele kaartje op hover */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+<form action="<?php echo Uri::base(); ?>index.php?option=com_planjeagenda&view=venue&layout=edit&id=<?php echo (int) $this->item->id; ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-lg-9">
+            <?php echo HTMLHelper::_('uitab.startTabSet', 'venueTabs', ['active' => 'details']); ?>
+
+            <!-- TAB 1: Algemene Gegevens -->
+            <?php echo HTMLHelper::_('uitab.addTab', 'venueTabs', 'details', 'Details'); ?>
+                <div class="card border-top-0 rounded-0">
+                    <div class="card-body">
+                        <?php echo $this->form->renderFieldset('details'); ?>
+                    </div>
+                </div>
+            <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+ <!-- TAB 2: Bijlagen -->
+<?php echo HTMLHelper::_('uitab.addTab', 'venueTabs', 'attachments', 'Bijlagen (' . count($attachments) . ')'); ?>
+    <div class="card border-top-0 rounded-0">
+        <div class="card-body">
+            
+            <!-- 1. Dropzone Upload (NU BOVENAAN) -->
+            <div class="upload-section mb-4">
+                <h5>Nieuwe bijlagen uploaden</h5>
+                <div id="pja-dropzone" class="dropzone border-dashed p-5 text-center rounded mb-3" 
+                data-max-width="<?php echo $dzConfig['max_width']; ?>" 
+                data-quality="<?php echo $dzConfig['quality']; ?>"
+     			data-max-files="<?php echo $dzConfig['max_files']; ?>"
+                style="background: #f8f9fa; border: 2px dashed #007bff;">
+                    <div class="dz-message">
+                        <span class="h4 text-primary">Sleep bestanden hierheen</span><br>
+                        <span class="text-muted">of klik om te selecteren</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5" />
+
+            <!-- 2. Overzicht van huidige bestanden (NU ONDERAAN) -->
+            <div class="attachments-list">
+                <h5 class="mb-3">Reeds gekoppelde bijlagen</h5>
+                <?php if (!empty($attachments)) : ?>
+                    <div class="row">
+                        <?php foreach ($attachments as $attachment) : ?>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="border p-2 rounded text-center bg-light shadow-sm h-100 d-flex flex-column">
+                                    <?php 
+                                        $filePath = Uri::root() . $attachment->path; 
+                                        $isImage  = in_array($attachment->filetype, ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+                                    ?>
+                                    <div class="img-preview mb-2 d-flex align-items-center justify-content-center bg-white" style="height: 100px; border: 1px solid #ddd; overflow: hidden;">
+                                        <?php if ($isImage) : ?>
+                                            <img src="<?php echo $filePath; ?>" class="img-fluid" style="max-height: 100%;">
+                                        <?php else : ?>
+                                            <span class="icon-file text-muted" style="font-size: 2.5rem;"></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="small text-truncate mb-auto" title="<?php echo $attachment->filename; ?>">
+                                        <strong><?php echo $attachment->filename; ?></strong>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-danger btn-sm mt-3 w-100" onclick="removeAttachment(<?php echo $attachment->id; ?>)">
+                                        <span class="icon-trash"></span> Verwijder
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else : ?>
+                    <div class="alert alert-light border">Nog geen bijlagen aanwezig voor deze locatie.</div>
+                <?php endif; ?>
+            </div>
+
+        </div>
+    </div>
+<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+            <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
+        </div>
+
+        <!-- Sidebar Kolom -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <?php echo $this->form->renderFieldset('sidebar'); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden containers voor Dropzone -->
+    <div id="attachments-data-container"></div>
+    <input type="hidden" name="task" value="">
+    <?php echo HTMLHelper::_('form.token'); ?>
+    
+    <div id="pja-modal" onclick="this.style.display='none'">
+    <img id="pja-modal-img" src="" alt="Preview">
+</div>
+</form>
+
+<style>
+    /* Dropzone basis styling */
+    .dropzone { 
+        border: 2px dashed #007bff !important; 
+        background: #f8f9fa !important; 
+        border-radius: 8px; 
+        min-height: 200px; 
+        transition: all 0.2s ease;
+    }
+    .dropzone:hover { border-color: #0056b3 !important; background: #f1f7ff !important; }
+
+    /* Preview kaartjes styling */
+    .dropzone .dz-preview {
+        margin: 15px;
+        min-height: 180px;
+        background: #fff !important;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        vertical-align: top;
+    }
+
+    /* Thumbnail fix & Zoom cursor */
+    .dropzone .dz-preview .dz-image {
+        border-radius: 4px !important;
+        width: 120px !important;
+        height: 120px !important;
+        margin-bottom: 40px;
+        cursor: zoom-in;
+        z-index: 1;
+    }
+
+    /* Voorkom faden en effecten op hover */
+    .dropzone .dz-preview:hover .dz-image img {
+        transform: none !important;
+        filter: none !important;
+        opacity: 1 !important;
+    }
+
+    /* Bestandsnaam en grootte onder het plaatje */
+    .dropzone .dz-preview .dz-details {
+        position: absolute;
+        top: 130px !important;
+        left: 0;
+        width: 100%;
+        background: transparent !important;
+        color: #333 !important;
+        opacity: 1 !important;
+        padding: 0 5px !important;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .dropzone .dz-preview .dz-details .dz-filename span {
+        background: transparent !important;
+        border: none !important;
+        font-weight: bold;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dropzone .dz-preview .dz-details .dz-size {
+        font-size: 11px;
+        color: #777;
+    }
+
+    /* Verwijder voortgangsbalk en vinkjes voor een schone look */
+    .dropzone .dz-preview .dz-progress,
+    .dropzone .dz-preview .dz-success-mark,
+    .dropzone .dz-preview .dz-error-mark {
+        display: none !important;
+    }
+
+    /* Verwijder-knop styling */
+    .dropzone .dz-preview .dz-remove {
+        position: absolute;
+        bottom: 8px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: #d9534f !important;
+        font-weight: bold;
+        font-size: 11px;
+        text-decoration: none;
+        z-index: 5;
+    }
+    
+    /* De Modal Achtergrond */
+#pja-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 9999; 
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.9);
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* De Afbeelding in de Modal */
+#pja-modal img {
+    max-width: 90%;
+    max-height: 90%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border-radius: 4px;
+}
+/* De 'Verwijder' link groter en duidelijker maken */
+.dropzone .dz-preview .dz-remove {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 10px;
+    font-size: 10px;             /* Iets groter lettertype */
+    font-weight: bold;
+    color: #fff !important;      /* Witte tekst */
+    background-color: #d9534f;   /* Rood/Gevaar kleur */
+    border-radius: 4px;
+    text-decoration: none !important;
+    transition: background 0.2s ease;
+    cursor: pointer;
+    z-index: 10;                 /* Zorg dat hij altijd bovenop ligt */
+}
+
+/* Hover effect voor de verwijderknop */
+.dropzone .dz-preview .dz-remove:hover {
+    background-color: #c9302c;   /* Donkerder rood bij overgaan */
+    color: #fff !important;
+}
+
+/* De container van het kaartje iets hoger maken om ruimte te geven aan de grotere knop */
+.dropzone .dz-preview {
+    min-height: 210px !important; 
+}
+/* De cursor veranderen naar een vergrootglas over de afbeelding */
+.dropzone .dz-preview .dz-image {
+    cursor: zoom-in !important;
+}
+
+/* Optioneel: Een lichte schaduw en schaling voor extra feedback */
+.dropzone .dz-preview .dz-image:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Als je de cursor over de hele kaart klikbaar wilt maken (behalve de verwijder-knop) */
+.dropzone .dz-preview {
+    cursor: zoom-in;
+}
+
+/* Zorg dat de cursor boven de verwijder-knop wel gewoon een handje (pointer) is */
+.dropzone .dz-preview .dz-remove {
+    cursor: pointer !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var dzElement = document.getElementById('pja-dropzone');
+    
+    if (dzElement && typeof Dropzone !== 'undefined') {
+        Dropzone.autoDiscover = false;
+
+        // Lees instellingen uit de HTML data-attributen
+        var maxWidth = parseInt(dzElement.getAttribute('data-max-width')) || 1200;
+        var quality  = parseFloat(dzElement.getAttribute('data-quality')) || 0.8;
+        var maxFiles = parseInt(dzElement.getAttribute('data-max-files')) || 10;
+
+        var myDropzone = new Dropzone("#pja-dropzone", { 
+            url: "index.php",
+            autoProcessQueue: false,
+            addRemoveLinks: true,
+            maxFiles: maxFiles,
+            resizeWidth: maxWidth,          
+            resizeQuality: quality,         
+            resizeMethod: 'contain',
+            
+            init: function() {
+                // 1. Verwerk verkleinde afbeelding naar hidden inputs
+                this.on("thumbnail", function(file, dataUrl) {
+                    var container = document.getElementById('attachments-data-container');
+                    var oldWrapper = document.getElementById('file-' + file.upload.uuid);
+                    if (oldWrapper) oldWrapper.remove();
+
+                    var wrapper = document.createElement('div');
+                    wrapper.id = 'file-' + file.upload.uuid;
+                    wrapper.innerHTML = `
+                        <input type="hidden" name="jform[attachments_data][]" value="${dataUrl}">
+                        <input type="hidden" name="jform[attachments_names][]" value="${file.name}">
+                    `;
+                    container.appendChild(wrapper);
+                    file.verkleindeData = dataUrl;
+                });
+
+                // 2. Modal Preview Logica
+                this.on("addedfile", function(file) {
+                    file.previewElement.addEventListener("click", function() {
+                        var imageData = file.verkleindeData || file.dataURL;
+                        if (imageData) {
+                            var modal = document.getElementById('pja-modal');
+                            var modalImg = document.getElementById('pja-modal-img');
+                            modalImg.src = imageData;
+                            modal.style.display = 'flex';
+                        }
+                    });
+                });
+
+                // 3. Verwijder uit dropbox
+                this.on("removedfile", function(file) {
+                    var wrapper = document.getElementById('file-' + file.upload.uuid);
+                    if (wrapper) wrapper.remove();
+                });
+            }
+        });
+    }
+});
+
+function removeAttachment(attachmentId) {
+    if (confirm('<?php echo \Joomla\CMS\Language\Text::_("COM_PLANJEAGENDA_CONFIRM_REMOVE_ATTACHMENT"); ?>')) {
+        // Haal de ID van de huidige venue op uit het formulier
+        var venueId = document.getElementById('jform_id').value;
+        
+        // Haal alleen de token hash op
+        var tokenName = '<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>';
+        
+        // Bouw de URL op inclusief de venue ID (id)
+        window.location.href = 'index.php?option=com_planjeagenda&task=venue.removeAttachment' + 
+                               '&id=' + venueId + 
+                               '&attachment_id=' + attachmentId + 
+                               '&' + tokenName + '=1';
+    }
+}
+</script>

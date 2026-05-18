@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_WEEKCAL_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_WEEKCAL_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+        <fieldset name="basic" addfieldpath="/administrator/components/com_planjeagenda/models/fields">
+            <field name="introtext" type="editor"
+                   filter="safehtml"
+                   hide="readmore,pagebreak,module,menu,fields,contact,article"
+                   default=""
+                   rows="8"
+                   cols="30"
+                   height="300px"
+                   label="com_planjeagenda_INTROTEXT_FIELD"
+                   description="com_planjeagenda_INTROTEXT_FIELD_DESC"
+            />
+            <field name="showintrotext" type="radio"
+                default="0"
+                label="com_planjeagenda_DISPLAY_INTROTEXT"
+                description="com_planjeagenda_DISPLAY_INTROTEXT_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">com_planjeagenda_SHOW</option>
+                <option value="0">com_planjeagenda_HIDE</option>
+            </field>
+            <field type="spacer" name="myspacer2" hr="true" />
+            <field name="show_archived_events" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOW_ARCHIVED_EVENTS"
+                description="com_planjeagenda_SHOW_ARCHIVED_EVENTS_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="nrweeks" type="text"
+                default="1"
+                label="com_planjeagenda_WKCAL_NRWEEKS"
+                description="com_planjeagenda_WKCAL_NRWEEKS_DESC"
+            />
+            <field name="top_category" type="categories"
+                default="0"
+                label="com_planjeagenda_SELECT_TOP_CATEGORY"
+                description="com_planjeagenda_SELECT_TOP_CATEGORY_DESC"
+            />
+            <field name="displayLegend" type="list"
+                default="1"
+                label="com_planjeagenda_DISPLAY_LEGEND"
+                description="com_planjeagenda_DISPLAY_LEGEND_DESC"
+            >
+                <option value="0">JNO</option>
+                <option value="2">com_planjeagenda_ABOVE</option>
+                <option value="1">com_planjeagenda_BELOW</option>
+            </field>
+            <field name="show_only_start" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOWONLYSTARTDAY"
+                description="com_planjeagenda_SHOWONLYSTARTDAY_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="firstweekday" type="list"
+                default="1"
+                label="com_planjeagenda_SELECTFIRSTWEEKDAY"
+                description="com_planjeagenda_SELECTFIRSTWEEKDAYDESC"
+            >
+                <option value="0">com_planjeagenda_SUNDAY</option>
+                <option value="1">com_planjeagenda_MONDAY</option>
+            </field>
+            <field name="daylimit" type="text"
+                default="10"
+                label="com_planjeagenda_MAX_EVENTS_PER_DAY"
+                description="com_planjeagenda_MAX_EVENTS_PER_DAY_DESC"
+            />
+            <field name="show_addevent_icon" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOWADDEVENTICON"
+                description="com_planjeagenda_SHOWADDEVENTICON_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_editevent_icon" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOWEDITEVENTICON"
+                description="com_planjeagenda_SHOWEDITEVENTICON_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_copyevent_icon" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOWCOPYEVENTICON"
+                description="com_planjeagenda_SHOWCOPYEVENTICON_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field type="spacer" name="myspacer3" hr="true" />
+            <field name="eventlinkcolor" type="color"
+                default="#000000"
+                label="com_planjeagenda_CALENDAR_EVENTLINKCOLOR"
+                description="com_planjeagenda_CALENDAR_EVENTLINKCOLOR_DESC"
+            />
+            <field name="eventbackgroundcolor" type="color"
+                default="#FFFF00"
+                label="com_planjeagenda_CALENDAR_EVENTBACKGROUNDCOLOR"
+                description="com_planjeagenda_CALENDAR_EVENTBACKGROUNDCOLOR_DESC"
+            />
+            <field name="eventbg_usecatcolor" type="radio"
+                default="0"
+                label="com_planjeagenda_CALENDAR_USECATCOLOR"
+                description="com_planjeagenda_CALENDAR_USECATCOLOR_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="currentdaycolor" type="color"
+                default="#CCCC99"
+                label="com_planjeagenda_CALENDAR_CURRENTDAYCOLOR"
+                description="com_planjeagenda_CALENDAR_CURRENTDAYCOLOR_DESC"
+            />
+            <field name="eventandmorecolor" type="color"
+                default="#FFFF00"
+                label="com_planjeagenda_CALENDAR_EVENTANDMORECOLOR"
+                description="com_planjeagenda_CALENDAR_EVENTANDMORECOLOR_DESC"
+            />
+            <field name="usefeaturedborder" type="radio"
+                default="0"
+                label="com_planjeagenda_CALENDAR_USEFEATUREDBORDER"
+                description="com_planjeagenda_CALENDAR_USEFEATUREDBORDER_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="featuredbordercolor" type="color"
+                default="#000080"
+                label="com_planjeagenda_CALENDAR_FEATUREDBORDERCOLOR"
+                description="com_planjeagenda_CALENDAR_FEATUREDBORDERCOLOR_DESC"
+            />
+            <field name="recurrenceIconRender" type="radio"
+                   default="0"
+                   label="com_planjeagenda_CALENDAR_RECURRENCE_ICON_RENDERING"
+                   description="com_planjeagenda_CALENDAR_RECURRENCE_ICON_RENDERING_DESC"
+                   class="btn-group btn-group-yesno"
+            >
+                <option value="0">com_planjeagenda_USE_FONT</option>
+                <option value="1">com_planjeagenda_USE_IMAGE</option>
+            </field>
+            <field name="categoryColorMarker" type="radio"
+                   default="0"
+                   label="com_planjeagenda_CALENDAR_CATEGORY_COLOR_MARKER"
+                   description="com_planjeagenda_CALENDAR_CATEGORY_COLOR_MARKER_DESC"
+                   class="btn-group btn-group-yesno"
+            >
+                <option value="0">com_planjeagenda_MARKER_BLOCK</option>
+                <option value="1">com_planjeagenda_MARKER_TOP_BAR</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

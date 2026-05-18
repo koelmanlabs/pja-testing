@@ -1,0 +1,645 @@
+/**
+ * planjeagenda.css — frontend design override
+ * Replaces jem.css via the media/css/custom/ override mechanism.
+ * Targets all frontend views: eventslist, event detail, venue, search, calendar.
+ * Uses CSS custom properties so colours can be tuned in one place.
+ *
+ * Palette:
+ *   --pja-green      primary action / buttons / accents
+ *   --pja-green-dark hover state
+ *   --pja-blue       featured / secondary accent
+ *   --pja-text       body text
+ *   --pja-muted      secondary labels, meta text
+ *   --pja-border     dividers, table borders
+ *   --pja-bg         light background for cards / filter bar
+ *   --pja-white      card background
+ *   --pja-radius     border-radius used consistently
+ */
+
+/* ── Custom properties ───────────────────────────────────────────────── */
+#klevents {
+    --pja-green:       #2e7d32;
+    --pja-green-dark:  #1b5e20;
+    --pja-blue:        #1565c0;
+    --pja-orange:      #e65100;
+    --pja-text:        #212529;
+    --pja-muted:       #6c757d;
+    --pja-border:      #dee2e6;
+    --pja-bg:          #f8f9fa;
+    --pja-white:       #ffffff;
+    --pja-radius:      8px;
+    --pja-shadow:      0 2px 8px rgba(0,0,0,.08);
+    font-family:       inherit;
+    color:             var(--pja-text);
+}
+
+/* ── Reset legacy JEM styles ─────────────────────────────────────────── */
+#klevents .clr,
+#klevents .floattext::after { display: block; clear: both; content: ''; }
+#klevents .floattext { overflow: visible; }
+
+/* ── Global typography ───────────────────────────────────────────────── */
+#klevents h1.componentheading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--pja-text);
+    margin: 0 0 1.25rem;
+    padding-bottom: .75rem;
+    border-bottom: 3px solid var(--pja-green);
+}
+#klevents h2.klevents,
+#klevents h2.location,
+#klevents h2.description,
+#klevents h2.register,
+#klevents h2.contact {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--pja-green);
+    margin: 1.5rem 0 .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+#klevents h2.klevents::before  { content: '\f073'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.location::before  { content: '\f3c5'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.register::before  { content: '\f4fc'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.contact::before   { content: '\f007'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+#klevents h2.description::before { content: '\f15c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9em; }
+
+/* ── Button bar ──────────────────────────────────────────────────────── */
+#klevents .buttons {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#klevents .buttons a,
+#klevents .buttons button {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .45rem 1rem;
+    border-radius: 5px;
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+#klevents .buttons .btn-primary,
+#klevents .buttons a.btn-primary  { background: var(--pja-green); color: #fff; border-color: var(--pja-green); }
+#klevents .buttons .btn-primary:hover { background: var(--pja-green-dark); border-color: var(--pja-green-dark); }
+#klevents .buttons .btn-secondary { background: var(--pja-white); color: var(--pja-text); border-color: var(--pja-border); }
+#klevents .buttons .btn-secondary:hover { background: var(--pja-bg); }
+
+/* ── Filter bar ──────────────────────────────────────────────────────── */
+#jem_filter {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: .85rem 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+#jem_filter .jem_fleft {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    float: none;
+}
+#jem_filter .jem_fright {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    float: none;
+    font-size: .85rem;
+    color: var(--pja-muted);
+}
+#jem_filter label {
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--pja-muted);
+    margin: 0;
+    white-space: nowrap;
+}
+#jem_filter .form-control,
+#jem_filter input.inputbox {
+    height: 36px;
+    padding: .3rem .65rem;
+    font-size: .9rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    background: var(--pja-white);
+    color: var(--pja-text);
+    transition: border-color .15s, box-shadow .15s;
+}
+#jem_filter .form-control:focus,
+#jem_filter input:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.15);
+}
+#jem_filter .btn {
+    height: 36px;
+    padding: 0 1rem;
+    font-size: .85rem;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+#jem_filter .btn-primary  { background: var(--pja-green); color: #fff; border-color: var(--pja-green); }
+#jem_filter .btn-primary:hover { background: var(--pja-green-dark); }
+#jem_filter .btn-secondary { background: var(--pja-white); color: var(--pja-muted); border-color: var(--pja-border); }
+#jem_filter .btn-secondary:hover { background: var(--pja-bg); color: var(--pja-text); }
+
+/* ── Events list table → clean modern table ──────────────────────────── */
+#klevents .table-responsive {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    box-shadow: var(--pja-shadow);
+    border: 1px solid var(--pja-border);
+}
+#klevents .eventtable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background: var(--pja-white);
+    font-size: .9rem;
+}
+
+/* Header */
+#klevents .eventtable thead tr {
+    background: var(--pja-green);
+    color: #fff;
+}
+#klevents .eventtable .sectiontableheader {
+    padding: .75rem 1rem;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #fff;
+    border: none;
+    white-space: nowrap;
+}
+#klevents .eventtable .sectiontableheader a {
+    color: #fff;
+    text-decoration: none;
+}
+#klevents .eventtable .sectiontableheader a:hover { color: rgba(255,255,255,.8); }
+
+/* Rows */
+#klevents .eventtable tbody tr {
+    border-bottom: 1px solid var(--pja-border);
+    transition: background .12s;
+}
+#klevents .eventtable tbody tr:last-child { border-bottom: none; }
+#klevents .eventtable tbody tr:hover { background: #f0f7f0; }
+#klevents .eventtable tbody tr.featured { background: #fffde7; }
+#klevents .eventtable tbody tr.featured:hover { background: #fff9c4; }
+#klevents .eventtable tbody tr.sectiontableentry1 { background: var(--pja-white); }
+#klevents .eventtable tbody tr.sectiontableentry2 { background: #fafafa; }
+
+/* Cells */
+#klevents .eventtable .header-td {
+    padding: .75rem 1rem;
+    vertical-align: middle;
+    border: none;
+    color: var(--pja-text);
+}
+
+/* Date column */
+#klevents .eventtable .jem_col_date,
+#klevents .eventtable td[headers="jem_date"] {
+    font-weight: 600;
+    color: var(--pja-green);
+    white-space: nowrap;
+    font-size: .85rem;
+}
+
+/* Title column */
+#klevents .eventtable td[headers="jem_title"] a {
+    color: var(--pja-text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color .15s;
+}
+#klevents .eventtable td[headers="jem_title"] a:hover { color: var(--pja-green); }
+
+/* Intro text in list */
+#klevents .klevents-event-intro {
+    font-size: .83rem;
+    color: var(--pja-muted);
+    margin-top: .35rem;
+    line-height: 1.45;
+}
+#klevents .klevents-event-intro a {
+    color: var(--pja-green);
+    font-weight: 600;
+    font-size: .8rem;
+}
+
+/* Image column */
+#klevents .eventtable td[headers="jem_eventimage"] img {
+    border-radius: 5px;
+    max-width: 72px;
+    height: auto;
+    display: block;
+}
+
+/* Category badge */
+#klevents .eventtable td[headers="jem_category"] a,
+#klevents .eventtable td[headers="jem_category"] span {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 700;
+    background: var(--pja-green);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Featured star */
+#klevents .klevents-featured-icon {
+    color: #f59e0b;
+    margin-left: .3rem;
+    font-size: .85em;
+}
+
+/* Lock icon */
+#klevents .klevents-lockicon {
+    color: var(--pja-muted);
+    font-size: .85em;
+    margin-left: .3rem;
+}
+
+/* No events row */
+#klevents .no_events td {
+    padding: 2rem;
+    text-align: center;
+    color: var(--pja-muted);
+    font-size: .95rem;
+}
+
+/* ── Event detail page ───────────────────────────────────────────────── */
+#klevents.jem_event {
+    max-width: 900px;
+}
+
+/* Event hero image */
+#klevents.jem_event .jem-flyer,
+#klevents.jem_event .jem-event-image {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--pja-shadow);
+}
+#klevents.jem_event .jem-flyer img,
+#klevents.jem_event .jem-event-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Info definition list */
+#klevents .event_info,
+#klevents dl.location {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.25rem;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: .5rem .75rem;
+    align-items: baseline;
+}
+#klevents .event_info dt,
+#klevents dl.location dt {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--pja-muted);
+    margin: 0;
+    padding: 0;
+}
+#klevents .event_info dd,
+#klevents dl.location dd {
+    font-size: .95rem;
+    color: var(--pja-text);
+    margin: 0;
+    padding: 0;
+}
+#klevents .event_info dd.when,
+#klevents .event_info dd[class="when"] {
+    color: var(--pja-green);
+    font-weight: 700;
+    font-size: 1rem;
+}
+#klevents .event_info dd.category a {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: var(--pja-green);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin: 1px 2px;
+}
+
+/* Description section */
+#klevents .description.event_desc {
+    font-size: .95rem;
+    line-height: 1.7;
+    color: var(--pja-text);
+    margin-bottom: 1.5rem;
+}
+#klevents .description.event_desc h1,
+#klevents .description.event_desc h2,
+#klevents .description.event_desc h3 {
+    margin-top: 1.25rem;
+    color: var(--pja-text);
+}
+
+/* Dividers */
+#klevents hr,
+#klevents hr.klevents-hr {
+    border: none;
+    border-top: 1px solid var(--pja-border);
+    margin: 1.5rem 0;
+}
+
+/* ── Registration section ────────────────────────────────────────────── */
+#klevents h2.register {
+    margin-top: 1.5rem;
+}
+/* Registration form */
+#klevents .jem-register-form,
+#klevents #klevents-registration {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1.25rem;
+    margin-top: 1rem;
+}
+/* Attendees list */
+#klevents ul.jem-registered-list {
+    list-style: none;
+    padding: 0;
+    margin: .75rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+#klevents ul.jem-registered-list li {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--pja-white);
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    padding: .35rem .75rem;
+    font-size: .85rem;
+}
+#klevents ul.jem-registered-list img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Register / unregister buttons */
+#klevents a.jem-register-btn,
+#klevents .jem-register-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 1.4rem;
+    background: var(--pja-green);
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background .15s;
+    margin-top: .75rem;
+}
+#klevents a.jem-register-btn:hover { background: var(--pja-green-dark); color: #fff; }
+#klevents a.jem-unregister-btn {
+    background: transparent;
+    color: var(--pja-muted);
+    border: 1px solid var(--pja-border);
+}
+#klevents a.jem-unregister-btn:hover { background: var(--pja-bg); color: var(--pja-text); }
+
+/* Waitinglist badge */
+#klevents .jem-waitinglist-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #fff3e0;
+    color: var(--pja-orange);
+    border: 1px solid #ffe0b2;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-left: .5rem;
+}
+
+/* Places count */
+#klevents .jem-places-count {
+    font-size: .85rem;
+    color: var(--pja-muted);
+    margin-top: .5rem;
+}
+#klevents .jem-places-count strong { color: var(--pja-text); }
+
+/* ── Venue detail page ───────────────────────────────────────────────── */
+#klevents.jem_venue .klevents-venue-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--pja-text);
+    margin-bottom: 1rem;
+}
+#klevents.jem_venue .jem-flyer {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--pja-shadow);
+}
+#klevents.jem_venue dl.location {
+    margin-bottom: 1.25rem;
+}
+#klevents.jem_venue .klevents-map {
+    border-radius: var(--pja-radius);
+    overflow: hidden;
+    margin: 1rem 0;
+    border: 1px solid var(--pja-border);
+}
+
+/* ── Search page ─────────────────────────────────────────────────────── */
+#klevents.jem_search .jem-search-form {
+    background: var(--pja-bg);
+    border: 1px solid var(--pja-border);
+    border-radius: var(--pja-radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+#klevents.jem_search .jem-search-field {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+#klevents.jem_search label {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--pja-muted);
+}
+#klevents.jem_search select,
+#klevents.jem_search input[type="text"],
+#klevents.jem_search input[type="date"] {
+    padding: .45rem .7rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .9rem;
+    background: var(--pja-white);
+    color: var(--pja-text);
+}
+#klevents.jem_search select:focus,
+#klevents.jem_search input:focus {
+    outline: none;
+    border-color: var(--pja-green);
+    box-shadow: 0 0 0 3px rgba(46,125,50,.15);
+}
+#klevents.jem_search .jem-search-buttons {
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+}
+#klevents.jem_search .btn-primary  { background: var(--pja-green); color: #fff; border: none; padding: .5rem 1.25rem; border-radius: 5px; font-weight: 600; cursor: pointer; }
+#klevents.jem_search .btn-primary:hover { background: var(--pja-green-dark); }
+#klevents.jem_search .btn-secondary { background: var(--pja-white); color: var(--pja-muted); border: 1px solid var(--pja-border); padding: .5rem 1rem; border-radius: 5px; cursor: pointer; }
+
+/* ── Pagination ──────────────────────────────────────────────────────── */
+#klevents .pagination,
+.pja-pagination { margin-top: 1.5rem; }
+#klevents .pagination ul,
+.pagination.pja-pagination ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#klevents .pagination li a,
+#klevents .pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 .6rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .85rem;
+    text-decoration: none;
+    color: var(--pja-text);
+    background: var(--pja-white);
+    transition: background .12s, border-color .12s;
+}
+#klevents .pagination li.active a,
+#klevents .pagination li.active span,
+#klevents .pagination li span.active {
+    background: var(--pja-green);
+    color: #fff;
+    border-color: var(--pja-green);
+    font-weight: 700;
+}
+#klevents .pagination li a:hover { background: var(--pja-bg); border-color: var(--pja-green); color: var(--pja-green); }
+
+/* ── Attachments ─────────────────────────────────────────────────────── */
+#klevents .attachments {
+    margin: 1rem 0;
+}
+#klevents .attachments a {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem .9rem;
+    border: 1px solid var(--pja-border);
+    border-radius: 5px;
+    font-size: .85rem;
+    color: var(--pja-text);
+    text-decoration: none;
+    background: var(--pja-white);
+    margin: .25rem .25rem .25rem 0;
+    transition: border-color .15s, background .15s;
+}
+#klevents .attachments a:hover {
+    border-color: var(--pja-green);
+    background: var(--pja-bg);
+    color: var(--pja-green);
+}
+
+/* ── Copyright / footer note ─────────────────────────────────────────── */
+#klevents .copyright {
+    font-size: .75rem;
+    color: var(--pja-muted);
+    margin-top: 2rem;
+    text-align: right;
+}
+
+/* ── Recurrence icon ─────────────────────────────────────────────────── */
+#klevents .klevents-recurrence-icon {
+    color: var(--pja-muted);
+    font-size: .8em;
+    margin-left: .25rem;
+}
+
+/* ── jem-responsive overrides ────────────────────────────────────────── */
+@media (max-width: 767px) {
+    #klevents .event_info,
+    #klevents dl.location {
+        grid-template-columns: 1fr;
+        gap: .25rem .5rem;
+    }
+    #klevents .event_info dt,
+    #klevents dl.location dt {
+        margin-top: .5rem;
+    }
+    #jem_filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    #jem_filter .jem_fleft,
+    #jem_filter .jem_fright { width: 100%; }
+    #klevents .eventtable .jem_col_state,
+    #klevents .eventtable .jem_col_category,
+    #klevents .eventtable .jem_col_attendees { display: none; }
+    #klevents.jem_search .jem-search-form { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    #klevents .eventtable .jem_col_venue,
+    #klevents .eventtable .jem_col_city { display: none; }
+    #klevents .eventtable .jem_col_date { font-size: .78rem; }
+    #klevents h1.componentheading { font-size: 1.3rem; }
+}

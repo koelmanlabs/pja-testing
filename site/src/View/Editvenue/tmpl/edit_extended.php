@@ -1,0 +1,43 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+
+//$max_custom_fields = $this->settings->get('global_editvenue_maxnumcustomfields', -1); // default to All
+?>
+
+<!-- IMAGE -->
+<?php if ($this->item->locimage || $this->jemsettings->imageenabled != 0) : ?>
+    <fieldset class="jem_fldst_image">
+        <legend><?php echo \Text::_('com_planjeagenda_IMAGE'); ?></legend>
+        <?php
+        if ($this->item->locimage) :
+            echo \PlanjeagendaOutput::flyer($this->item, $this->limage, 'venue', 'locimage');
+            ?><input type="hidden" name="locimage" id="locimage" value="<?php echo $this->item->locimage; ?>" /><?php
+        endif;
+        ?>
+        <?php if ($this->jemsettings->imageenabled != 0) : ?>
+            <ul class="adminformlist">
+                <li>
+                    <?php /* We get field with id 'jform_userfile' and name 'jform[userfile]' */ ?>
+                    <?php echo $this->form->getLabel('userfile'); ?> <?php echo $this->form->getInput('userfile'); ?>
+                    <button type="button" class="button3 btn-sm btn-secondary" onclick="document.getElementById('jform_userfile').value = ''"><?php echo \Text::_('JSEARCH_FILTER_CLEAR') ?></button>
+                    <?php
+                    if ($this->item->locimage) :
+                        echo \HTMLHelper::image('media/com_planjeagenda/images/publish_r.webp', null, array('id' => 'userfile-remove', 'data-id' => $this->item->id, 'data-type' => 'venues', 'title' => \Text::_('com_planjeagenda_REMOVE_IMAGE')));
+                    endif;
+                    ?>
+                </li>
+            </ul>
+            <input type="hidden" name="removeimage" id="removeimage" value="0" />
+        <?php endif; ?>
+    </fieldset>
+<?php endif;

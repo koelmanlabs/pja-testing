@@ -1,0 +1,6 @@
+/**
+ * klevents-responsive.css
+ * Responsive layout variant — media queries are included in klevents.css.
+ * This file exists so loadCss() finds it when layoutstyle = 1.
+ */
+@import url("klevents.css");

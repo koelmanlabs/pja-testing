@@ -1,0 +1,162 @@
+<?php
+/**
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2005-2009 Christoph Lukes
+ * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
+ */
+
+namespace KoelmanLabs\Component\Planjeagenda\Site\View\Weekcal;
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
+
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
+
+/**
+ * Weekcal-View
+ */
+class HtmlView extends BaseHtmlView
+{
+    /**
+     * Creates the Calendar View
+     */
+    public function display($tpl = null)
+    {
+        // Default view properties
+        $this->pageclass_sfx = '';
+        $this->pageheading   = '';
+        $this->pagetitle     = '';
+        // initialize variables
+        $app          = Factory::getApplication();
+        $document     = $app->getDocument();
+        $menu         = $app->getMenu();
+        $menuitem     = $menu->getActive();
+        $jemsettings  = \PlanjeagendaHelper::config();
+        $settings     = \PlanjeagendaHelper::globalattribs();
+        $user         = Factory::getApplication()->getIdentity();
+        $params       = ($app->isClient('administrator') ? \Joomla\CMS\Component\ComponentHelper::getParams('com_planjeagenda') : $app->getParams());
+        $top_category = (int)$params->get('top_category', 0);
+        $jinput       = $app->input;
+        $print        = $jinput->getBool('print', false);
+
+        $this->param_topcat = $top_category > 0 ? ('&topcat='.$top_category) : '';
+        $url             = Uri::root();
+
+        // Load css
+        \PlanjeagendaHelper::loadCss('klevents');
+        \PlanjeagendaHelper::loadCss('calendar');
+        \PlanjeagendaHelper::loadCustomCss();
+        \PlanjeagendaHelper::loadCustomTag();
+
+        if ($print) {
+            \PlanjeagendaHelper::loadCss('print');
+            $document->setMetaData('robots', 'noindex, nofollow');
+        }
+
+        $evlinkcolor = $params->get('eventlinkcolor');
+        $evbackgroundcolor = $params->get('eventbackgroundcolor');
+        $currentdaycolor = $params->get('currentdaycolor');
+        $eventandmorecolor = $params->get('eventandmorecolor');
+
+        $style = '
+        div#klevents .eventcontentinner a,
+        div#klevents .eventandmore a {
+            color:' . $evlinkcolor . ';
+        }
+        .eventcontentinner {
+            background-color:'.$evbackgroundcolor .';
+        }
+        .eventandmore {
+            background-color:'.$eventandmorecolor .';
+        }
+
+        .today .daynum {
+            background-color:'.$currentdaycolor.';
+        }';
+
+        $document->addStyleDeclaration($style);
+
+        // add javascript (using full path - see issue #590)
+        // HTMLHelper::_('script', 'media/com_planjeagenda/js/calendar.js');
+        $document->addScript($url.'media/com_planjeagenda/js/calendar.js');
+
+        $year  = (int)$jinput->getInt('yearID', date("Y"));
+        $month  = (int)$jinput->getInt('monthID', date("m"));
+        $week = (int)$jinput->getInt('weekID', $this->get('Currentweek'));
+
+		// Adjustment of the ISO-8601 week number at the end or beginning of the year.
+		// Case 1: Late December days belonging to Week 1 of the NEXT year.
+		// Case 2: Early January days belonging to Week 52/53 of the PREVIOUS year.
+		
+		if ($month == 12 && $week == 1) {
+		    $year++;
+		} elseif ($month == 1 && $week >= 52) {
+		    $year--;
+		}
+
+        // get data from model and set the month
+        $model = $this->getModel();
+
+        $rows = $this->get('Items');
+
+        // Set Page title
+        $pagetitle = $params->def('page_title', $menuitem->title);
+        $params->def('page_heading', $pagetitle);
+        $pageclass_sfx = $params->get('pageclass_sfx');
+
+        // Add site name to title if param is set
+        if ($app->get('sitename_pagetitles', 0) == 1) {
+            $pagetitle = Text::sprintf('JPAGETITLE', $app->get('sitename'), $pagetitle);
+        }
+        elseif ($app->get('sitename_pagetitles', 0) == 2) {
+            $pagetitle = Text::sprintf('JPAGETITLE', $pagetitle, $app->get('sitename'));
+        }
+
+        $document->setTitle($pagetitle);
+        $document->setMetaData('title', $pagetitle);
+
+        // Check if the user has permission to add things
+        $permissions = new \stdClass();
+        $catIds = $model->getCategories('all');
+        $permissions->canAddEvent = $user->authorise('core.create', 'com_planjeagenda');
+        $permissions->canAddVenue = $user->authorise('core.create', 'com_planjeagenda');
+
+        $itemid  = $jinput->getInt('Itemid', 0);
+
+        $partItemid = ($itemid > 0) ? '&Itemid=' . $itemid : '';
+        $partDate = ($year ? ('&yearID=' . $year) : '') . ($week ? ('&weekID=' . $week) : '');
+        $url_base = 'index.php?option=com_planjeagenda&view=weekcal' . $partItemid;
+
+        $print_link = Route::_($url_base . $partDate . '&print=1&tmpl=component');
+
+        // init calendar
+        if (!class_exists('ActiveCalendarWeek')) {
+            require_once JPATH_SITE . '/components/com_planjeagenda/classes/activecalendarweek.php';
+        }
+        $cal = new ActiveCalendarWeek($year,1,1);
+        $cal->enableWeekNum(Text::_('com_planjeagenda_WKCAL_WEEK'),null,''); // enables week number column with linkable week numbers
+        $cal->setFirstWeekDay($params->get('firstweekday', 0));
+        $cal->enableDayLinks('index.php?option=com_planjeagenda&view=day' . $this->param_topcat);
+
+        $this->rows          = $rows;
+        $this->params        = $params;
+        $this->jemsettings   = $jemsettings;
+        $this->settings      = $settings;
+        $this->permissions   = $permissions;
+        $this->currentweek   = $week;
+        $this->cal           = $cal;
+        $this->pageclass_sfx = $pageclass_sfx ? htmlspecialchars($pageclass_sfx) : $pageclass_sfx;
+        $this->print_link    = $print_link;
+        $this->print         = $print;
+        $this->ical_link     = $partDate;
+
+        parent::display($tpl);
+    }
+}

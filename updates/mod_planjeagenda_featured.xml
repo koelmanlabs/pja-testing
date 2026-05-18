@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+    <update>
+        <name>Planjeagenda Featured Events</name>
+        <description>Displays featured events in a card or slider layout.</description>
+        <element>mod_planjeagenda_featured</element>
+        <type>module</type>
+        <folder>site</folder>
+        <version>1.0.0</version>
+        <infourl title="Planjeagenda Releases">https://github.com/koelmanlabs/planjeagenda/releases</infourl>
+        <downloads>
+            <downloadurl type="full" format="zip">https://github.com/koelmanlabs/planjeagenda/releases/download/v1.0.0/mod_planjeagenda_featured.zip</downloadurl>
+        </downloads>
+        <tags>
+            <tag>stable</tag>
+        </tags>
+        <maintainer>Koelman Labs</maintainer>
+        <maintainerurl>https://github.com/koelmanlabs/planjeagenda</maintainerurl>
+        <targetplatform name="joomla" version="6.0"/>
+        <php_minimum>8.2</php_minimum>
+    </update>
+</updates>

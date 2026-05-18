@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+    <fieldset name="details"
+              addfieldprefix="KoelmanLabs\Component\Planjeagenda\Administrator\Field"
+    >
+        <field name="name" type="text"
+            class="inputbox"
+            size="40"
+            label="com_planjeagenda_GROUP_NAME"
+            description="com_planjeagenda_GROUP_NAME"
+            required="true"
+        />
+        <field name="description" type="editor"
+            class="inputbox"
+            label="com_planjeagenda_GROUP_DESCRIPTION"
+            description="com_planjeagenda_GROUP_DESCRIPTION_DESC"
+            hide="pagebreak,readmore"
+            filter="safehtml"
+            rows="3" cols="40"
+        />
+        <field name="id" type="text"
+            class="readonly"
+            label="JGLOBAL_FIELD_ID_LABEL"
+            description="JGLOBAL_FIELD_ID_DESC"
+            default="0"
+            readonly="true"
+        />
+        <field name="addvenue" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_ADDVENUE"
+            description="com_planjeagenda_GROUP_ADDVENUE_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="publishvenue" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_PUBLISHVENUE"
+            description="com_planjeagenda_GROUP_PUBLISHVENUE_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="editvenue" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_EDITVENUE"
+            description="com_planjeagenda_GROUP_EDITVENUE_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field type="spacer" name="spacer" hr="true" />
+        <field name="addevent" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_ADDEVENT"
+            description="com_planjeagenda_GROUP_ADDEVENT_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="publishevent" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_PUBLISHEVENT"
+            description="com_planjeagenda_GROUP_PUBLISHEVENT_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="editevent" type="radio"
+            class="inputbox btn-group btn-group-yesno"
+            label="com_planjeagenda_GROUP_EDITEVENT"
+            description="com_planjeagenda_GROUP_EDITEVENT_DESC"
+            default="0"
+            required="false"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+</form>

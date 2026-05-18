@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="com_planjeagenda_VENUESLIST_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[com_planjeagenda_VENUESLIST_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic" addfieldpath="/administrator/components/com_planjeagenda/models/fields">
+            <field name="introtext" type="editor"
+                   filter="safehtml"
+                   hide="readmore,pagebreak,module,menu,fields,contact,article"
+                   default=""
+                   rows="8"
+                   cols="30"
+                   height="300px"
+                   label="com_planjeagenda_INTROTEXT_FIELD"
+                   description="com_planjeagenda_INTROTEXT_FIELD_DESC"
+            />
+            <field name="showintrotext" type="radio"
+                default="0"
+                label="com_planjeagenda_DISPLAY_INTROTEXT"
+                description="com_planjeagenda_DISPLAY_INTROTEXT_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="showstate" type="radio"
+                default="0"
+                label="com_planjeagenda_SHOWSTATE"
+                description="com_planjeagenda_SHOWSTATE_DESC"
+                class="btn-group btn-group-yesno"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+        </fieldset>
+    </fields>
+</metadata>
