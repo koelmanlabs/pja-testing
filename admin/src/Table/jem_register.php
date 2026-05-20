@@ -31,6 +31,12 @@ class jem_register extends Table
     public $waiting = 0;
     /** @var int */
     public $status = 0;
+    public ?int $minbookeduser = null;
+    public ?int $maxbookeduser = null;
+    public ?int $recurrence_type = null;
+    public ?int $seriesbooking = null;
+    public ?int $waitinglist = null;
+    public ?string $eventtitle = null;
 
 
     public function __construct($db)

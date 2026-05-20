@@ -1,20 +1,18 @@
 <?php
 /**
- * @package    KLEvents
- * @copyright  (C) 2026 Koelman Labs
+ * @package    Planjeagenda
+ * @copyright  (C) 2026 KoelmanLabs
  * @copyright  (C) 2005-2009 Christoph Lukes
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
 
 defined('_JEXEC') or die;
 
-if (!class_exists('PlanjeagendaOutput', false)) {
-    require_once JPATH_SITE . '/components/com_planjeagenda/classes/output.class.php';
-}
 
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use KoelmanLabs\Component\Planjeagenda\Administrator\Helper\OutputHelper;
 ?>
 
 <form action="index.php?option=com_planjeagenda&amp;view=userelement&tmpl=component" method="post" id="adminForm" name="adminForm">
@@ -56,7 +54,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             <tr class="<?php echo "row$k"; ?>">
                 <td class="center"><?php echo $this->pagination->getRowOffset( $i ); ?></td>
                 <td>
-                    <span <?php echo \PlanjeagendaOutput::tooltip(Text::_('com_planjeagenda_SELECT'), $row->name, 'editlinktip'); ?>>
+                    <span <?php echo OutputHelper::tooltip(Text::_('com_planjeagenda_SELECT'), $row->name, 'editlinktip'); ?>>
                     <a style="cursor:pointer" onclick="window.parent.modalSelectUser('<?php echo $row->id; ?>', '<?php echo str_replace( array("'", "\""), array("\\'", ""), $row->name ); ?>');">
                         <?php echo $this->escape($row->name); ?>
                     </a></span>

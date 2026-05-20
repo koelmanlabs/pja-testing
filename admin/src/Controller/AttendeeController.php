@@ -1,10 +1,10 @@
 <?php
 /**
  * @package    Planjeagenda
- * @copyright  (C) 2026 Koelman Labs
+ * @copyright  (C) 2026 KoelmanLabs
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
-
+declare(strict_types=1);
 namespace KoelmanLabs\Component\Planjeagenda\Administrator\Controller;
 
 defined('_JEXEC') or die;
@@ -96,7 +96,7 @@ class AttendeeController extends BaseController
         $old_uid    = (!empty($old_data->uid)    ? $old_data->uid    : 0);
         $old_status = (!empty($old_data->status) ? $old_data->status : 0);
 
-        if ($row = $model->store($post)) {
+        if ($row = $model->save($post)) {
             if ($sendemail == 1) {
                 PluginHelper::importPlugin('planjeagenda');
                 $dispatcher = Factory::getApplication();

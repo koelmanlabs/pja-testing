@@ -1,7 +1,7 @@
 <?php
 /**
- * @package    KLEvents
- * @copyright  (C) 2026 Koelman Labs
+ * @package    Planjeagenda
+ * @copyright  (C) 2026 KoelmanLabs
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
 
@@ -64,7 +64,7 @@ class UserelementModel extends BaseDatabaseModel
     protected function buildQuery()
     {
         $app              = Factory::getApplication();
-        $jemsettings      = \PlanjeagendaHelper::config();
+        $jemsettings      = PlanjeagendaHelper::config();
 
         $filter_order     = $app->getUserStateFromRequest( 'com_planjeagenda.userelement.filter_order', 'filter_order', 'u.name', 'cmd' );
         $filter_order_Dir = $app->getUserStateFromRequest( 'com_planjeagenda.userelement.filter_order_Dir', 'filter_order_Dir', '', 'word' );
@@ -112,7 +112,7 @@ class UserelementModel extends BaseDatabaseModel
     public function getPagination()
     {
         $app         = Factory::getApplication();
-        $jemsettings = \PlanjeagendaHelper::config();
+        $jemsettings = PlanjeagendaHelper::config();
 
         $limit       = $app->getUserStateFromRequest('com_planjeagenda.userelement.limit', 'limit', $jemsettings->display_num, 'int');
         $limitstart  = $app->input->getInt('limitstart', 0);

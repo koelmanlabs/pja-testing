@@ -4,7 +4,7 @@
  * @copyright  (C) 2026 Koelman Labs
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
-
+declare(strict_types=1);
 namespace KoelmanLabs\Component\Planjeagenda\Administrator\Controller;
 
 defined('_JEXEC') or die;

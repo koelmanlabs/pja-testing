@@ -4,29 +4,78 @@
  * @copyright  (C) 2026 KoelmanLabs
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
-
+declare(strict_types=1);
 namespace KoelmanLabs\Component\Planjeagenda\Administrator\Model;
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Factory;
-use KoelmanLabs\Component\Planjeagenda\Administrator\Helper\PlanjeagendaHelper;
-use Joomla\CMS\Table\Table;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
+use KoelmanLabs\Component\Planjeagenda\Administrator\Service\AttendeeService;
 
 
 class AttendeeModel extends AdminModel
 {
-    public function getTable($type = 'Attendee', $prefix = 'Administrator', $config = [])
+    
+    protected int $id = 0;
+    protected ?object $data = null;
+    private readonly AttendeeService $attendeeService;
+    
+    
+    
+    /**
+     * Constructor
+     */
+    public function __construct($config = [], $factory = null)
+    {
+        parent::__construct($config);
+        
+        $this->attendeeService ??= new AttendeeService();
+        
+        $jinput = Factory::getApplication()->input;
+        
+        $array = $jinput->get('id', 0, 'array');
+        
+        if (is_array($array)) {
+            $this->setId((int) $array[0]);
+        } 
+    }
+    
+    
+    
+    
+    /*
+     * 
+     */
+    public function getTable(
+        $type = 'Attendee',
+        $prefix = 'Table',
+        $config = []
+        ): object
     {
         return parent::getTable($type, $prefix, $config);
     }
     
     
-    public function getForm($data = [], $loadData = true)
+    
+    /*
+     * 
+     */
+    protected function prepareTable($table): void
+    {
+        if (empty($table->id)) {
+            $table->created = Factory::getDate()->toSql();
+        }
+        
+        $table->modified = Factory::getDate()->toSql();
+    }
+    
+    
+    
+    
+    
+    public function getForm($data = [], $loadData = true): \Joomla\CMS\Form\Form|false
     {
         return $this->loadForm(
             'com_planjeagenda.attendee',
@@ -38,44 +87,44 @@ class AttendeeModel extends AdminModel
             );
     }
     
-    protected function loadFormData()
+    
+    
+    /*
+     * 
+     */
+    protected function loadFormData(): ?object
     {
-        return $this->getItem();
+        return $this->getData();
     }
+   
     
     
-    
-
-    /**
-     * attendee id
-     *
-     * @var int
+    /*
+     * 
      */
-    protected $_id = null;
-
-    /**
-     * Category data array
-     *
-     * @var array
-     */
-    protected $_data = null;
-
-
-    /**
-     * Constructor
-     */
-    public function __constructXXX($config = [], $factory = null)
+    public function validate($form, $data, $group = null)
     {
-        parent::__construct();
-
-        $jinput = Factory::getApplication()->input;
-        $array = $jinput->get('id',  0, 'array');
-
-        if(is_array($array))
-        {
-            $this->setId((int)$array[0]);
+        $validData = parent::validate($form, $data, $group);
+        
+        if ($validData === false) {
+            return false;
         }
+        
+        if (empty($validData['event'])) {
+            $this->setError(Text::_('COM_PLANJEAGENDA_ERROR_EVENT_REQUIRED'));
+            return false;
+        }
+        
+        if (empty($validData['uid'])) {
+            $this->setError(Text::_('COM_PLANJEAGENDA_ERROR_USER_REQUIRED'));
+            return false;
+        }
+        
+        return $validData;
     }
+    
+   
+ 
 
     /**
      * Method to set the identifier
@@ -83,336 +132,111 @@ class AttendeeModel extends AdminModel
      * @access public
      * @param  int  category identifier
      */
-    public function setIdXXX($id)
+    public function setId(int $id): void
     {
         // Set category id and wipe data
-        $this->_id = $id;
-        $this->_data = null;
+        $this->id = (int) $id;
+        $this->data = null;
     }
 
+    
+    
     /**
      * Method to get data
      *
      * @access public
      * @return array
      */
-    public function getDataXXX()
+    public function getData(): object
     {
-        if (!$this->_loadData()) {
-            $this->_initData();
+        if ($this->data !== null) {
+            return $this->data;
         }
-
-        return $this->_data;
-    }
-
-    /**
-     * Method to load data
-     *
-     * @access protected
-     * @return boolean  True on success
-     */
-    protected function _loadDataXXX()
-    {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_data))
-        {
-            $db = Factory::getContainer()->get('DatabaseDriver');
-
-            $query = $db->getQuery(true);
-            $query->select(array('r.*','u.name AS username', 'a.title AS eventtitle', 'a.waitinglist', 'a.maxbookeduser', 'a.minbookeduser', 'a.recurrence_type', 'a.seriesbooking'));
-            $query->from('#__pja_register as r');
-            $query->join('LEFT', '#__users AS u ON (u.id = r.uid)');
-            $query->join('LEFT', '#__pja_events AS a ON (a.id = r.event)');
-            $query->where(array('r.id= '.$db->quote($this->_id)));
-
-            $this->_db->setQuery($query);
-            $this->_data = $this->_db->loadObject();
-
-            // Merge status and waiting
-            if (!empty($this->_data) && !empty($this->_data->waiting) && ($this->_data->status == 1)) {
-                $this->_data->status = 2;
+        
+        if ($this->id > 0) {
+            
+            $this->data = $this->attendeeService
+            ->findById($this->id);
+            
+            if ($this->data !== null) {
+                return $this->data;
             }
-
-            return (boolean) $this->_data;
         }
-        return true;
+        
+        $eventId = Factory::getApplication()
+        ->input
+        ->getInt('eventid', 0);
+        
+        $this->data = $this->attendeeService
+        ->createEmptyAttendee($eventId);
+        
+        return $this->data;
     }
-
-    /**
-     * Method to initialise the data
-     *
-     * @access protected
-     * @return boolean  True on success
+    
+    
+   
+    /*
+     * 
      */
-    protected function _initDataXXX()
+    public function toggle(): bool
     {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_data))
-        {
-            $data = (new \KoelmanLabs\Component\Planjeagenda\Administrator\Table\jem_register(\Joomla\CMS\Factory::getContainer()->get('DatabaseDriver')));
-            $data->username = null;
-            if (empty($data->eventtitle)) {
-                $jinput = Factory::getApplication()->input;
-                $eventid = $jinput->getInt('eventid', 0);
-                $table = $this->getTable('Event', 'Table');
-                $table->load($eventid);
-                if (!empty($table->title)) {
-                    $data->eventtitle = $table->title;
-                    $data->event = $table->id;
-                    $data->maxbookeduser = $table->maxbookeduser;
-                    $data->minbookeduser = $table->minbookeduser;
-                    $data->recurrence_type = $table->recurrence_type;
-                    $data->seriesbooking = $table->seriesbooking;
-                }
-                $data->waitinglist = $table->waitinglist ?? 0;
-            }
-            $this->_data = $data;
-        }
-        return true;
-    }
-
-    public function toggleXXX()
-    {
-        $attendee = $this->getData();
-
-        if (!$attendee->id) {
-            $this->setError(Text::_('com_planjeagenda_MISSING_ATTENDEE_ID'));
+        try {
+            
+            return $this->attendeeService
+            ->toggle($this->getData());
+            
+        } catch (\RuntimeException $e) {
+            
+            $this->setError($e->getMessage());
+            
             return false;
         }
-
-        $row = (new \KoelmanLabs\Component\Planjeagenda\Administrator\Table\jem_register(\Joomla\CMS\Factory::getContainer()->get('DatabaseDriver')));
-        $row->bind($attendee);
-        $row->waiting = ($attendee->waiting || ($attendee->status == 2)) ? 0 : 1;
-        if ($row->status == 2) {
-            $row->status = 1;
-        }
-        return $row->store();
-    }
-
+    } 
+    
+    
+    
     /**
      * Method to store the attendee
-     *
-     * @access public
-     * @return boolean  True on success
-     *
      */
-    public function storeXXX($data)
+    public function save($data): bool
     {
-        $eventid = $data['event'];
-        $userid  = $data['uid'];
-        $id      = !empty($data['id']) ? (int)$data['id'] : 0;
-        $status = $data['status'] ?? false;
-
-        // Split status and waiting
-        if ($status !== false) {
-            if ($status == 2) {
-                $data['status'] = 1;
-                $data['waiting'] = 1;
-            } elseif ($status == 1) {
-                $data['waiting'] = 0;
-            }
-        }
-
-        // $row = $this->getTable('jem_register', '');
-        $row = (new \KoelmanLabs\Component\Planjeagenda\Administrator\Table\jem_register(\Joomla\CMS\Factory::getContainer()->get('DatabaseDriver')));
-
-        if ($id > 0) {
-            $row->load($id);
-            $old_data = clone $row;
-        }
-
-        // bind it to the table
-        if (!$row->bind($data)) {
-            Factory::getApplication()->enqueueMessage($row->getError(), 'error');
+        try {
+            
+            return $this->attendeeService->save($data);
+            
+        } catch (\RuntimeException $e) {
+            
+            $this->setError($e->getMessage());
+            
+            Factory::getApplication()->enqueueMessage(
+                $e->getMessage(),
+                'warning'
+                );
+            
             return false;
-        }
-
-        // sanitise id field
-        $row->id = (int)$row->id;
-        $db = Factory::getContainer()->get('DatabaseDriver');
-
-        // Check if user is already registered to this event
-        $query = $db->getQuery(true);
-        $query->select(array('COUNT(id) AS count'));
-        $query->from('#__pja_register');
-        $query->where('event = '.$db->quote($eventid));
-        $query->where('uid = '.$db->quote($userid));
-        if ($row->id) {
-            $query->where('id != '.$db->quote($row->id));
-        }
-        $db->setQuery($query);
-        $cnt = $db->loadResult();
-
-        if ($cnt > 0) {
-            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_ERROR_USER_ALREADY_REGISTERED'), 'warning');
-            return false;
-        }
-
-        // Are we saving from an item edit?
-        if ($row->id) {
-
-        } else {
-            if ($row->status === 0) {
-                // todo: add "invited" field to store such timestamps?
-            } else { // except status "invited"
-                $row->uregdate = gmdate('Y-m-d H:i:s');
-            }
-
-            // Get event
-            $query = $db->getQuery(true);
-            $query->select(array('id','maxplaces','waitinglist','recurrence_first_id','recurrence_type','seriesbooking','singlebooking'));
-            $query->from('#__pja_events');
-            $query->where('id= '.$db->quote($eventid));
-
-            $db->setQuery($query);
-            $event = $db->loadObject();
-
-            // If recurrence event, save series event
-            $events = array();
-            if($event->recurrence_type){
-                // Retrieving seriesbooking
-                $seriesbooking = $data["seriesbooking"];
-                $singlebooking = $data["singlebooking"];
-
-                // If event has 'seriesbooking' active
-                if($event->seriesbooking && $seriesbooking && !$singlebooking){
-                    //GEt date and time now
-                    $dateFrom = date('Y-m-d', time());
-                    $timeFrom = date('H:i', time());
-
-                    // Get the all recurrence events of serie from now
-                    $query = $db->getQuery(true);
-                    $query->select(array('id','recurrence_first_id','maxplaces','waitinglist','recurrence_type','seriesbooking','singlebooking'));
-                    $query->from('#__pja_events as a');
-                    $query->where('((a.recurrence_first_id = 0 AND a.id = ' . (int)($event->recurrence_first_id?$event->recurrence_first_id:$event->id) . ') OR a.recurrence_first_id = ' . (int)($event->recurrence_first_id?$event->recurrence_first_id:$event->id) . ")");
-                    $query->where("(a.dates > '" . $dateFrom . "' OR a.dates = '" . $dateFrom . "' AND dates >= '" . $timeFrom . "')");
-                    $db->setQuery($query);
-                    $events = $db->loadObjectList();
-                }
-            }
-
-            if (!isset($events) || !count ($events)){
-                $events [] = clone $event;
-            }
-
-            foreach ($events as $e) {
-
-                // Check if user is registered to each series event
-                $query = $db->getQuery(true);
-                $query->select(array('COUNT(id) AS count'));
-                $query->from('#__pja_register');
-                $query->where('event = '.$db->quote($e->id));
-                $query->where('uid = '.$db->quote($userid));
-                $db->setQuery($query);
-                $cnt = $db->loadResult();
-
-                if ($cnt > 0) {
-                    Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_ERROR_USER_ALREADY_REGISTERED') . '[id: ' . $e->id . ']', 'warning');
-                    continue;
-                }
-
-                $row_aux= clone $row;
-                $row_aux->event = $e->id;
-
-                // Get register information of the event
-                $query = $db->getQuery(true);
-                $query->select(array('COUNT(id) AS registered', 'COALESCE(SUM(waiting), 0) AS waiting'));
-                $query->from('#__pja_register');
-                $query->where('status = 1 AND event = ' . $db->quote($e->id));
-
-                $db->setQuery($query);
-                $register = $db->loadObject();
-
-                // If no one is registered yet, $register is null!
-                if (is_null($register)) {
-                    $register = new \stdClass;
-                    $register->registered = 0;
-                    $register->waiting = 0;
-                    $register->booked = 0;
-                } else {
-                    $register->booked = $register->registered + $register->waiting;
-                }
-
-                // put on waiting list ?
-                if (($event->maxplaces > 0) && ($status == 1)) // there is a max and user will attend
-                {
-                    // check if the user should go on waiting list
-                    if ($register->booked >= $event->maxplaces) {
-                        if (!$event->waitinglist) {
-                            Factory::getApplication()->enqueueMessage(Text::_('com_planjeagenda_ERROR_REGISTER_EVENT_IS_FULL'), 'warning');
-                            return false;
-                        } else {
-                            $row_aux->waiting = 1;
-                        }
-                    }else{
-                        $row_aux->status = $status;
-                    }
-                }else{
-                    $row_aux->status = $status;
-                }
-
-                // Make sure the data is valid
-                if (!$row_aux->check()) {
-                    $this->setError($row->getError());
-                    return false;
-                }
-
-                // Store it in the db
-                if (!$row_aux->store()) {
-                    Factory::getApplication()->enqueueMessage($row->getError(), 'error');
-                    return false;
-                }
-            }
-            return $row;
         }
     }
 
-    /**
-     * Method to set status of registered
-     *
-     * @param  array $pks   IDs of the attendee records
-     * @param  int   $value Status value: -1 - "not attending", 0 - "invited", 1 - "attending", 2 - "on waiting list"
-     * @return boolean      True on success.
-     */
-    public function setStatusXXX($pks, $value = 1)
-    {
-        // Sanitize the ids.
-        $pks = (array)$pks;
-        \Joomla\Utilities\ArrayHelper::toInteger($pks);
 
-        if (empty($pks)) {
-            $this->setError(Text::_('JERROR_NO_ITEMS_SELECTED'));
-            return false;
-        }
 
-        // Split status and waiting
-        if ($value == 2) {
-            $status = 1;
-            $waiting = 1;
-        } else {
-            $status = (int)$value;
-            $waiting = 0;
-        }
 
-        try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
-
-            $db->setQuery(
-                    'UPDATE #__pja_register' .
-                    ' SET status = '.$status.', waiting = '.$waiting.
-                    ' WHERE id IN ('.implode(',', $pks).')'
-                    );
-            if ($db->execute() === false) {
-                throw new \Exception($db->getErrorMsg());
-            }
-
-        } catch (\Exception $e) {
-            \PlanjeagendaHelper::addLogEntry($e->getMessage(), __METHOD__, Log::ERROR);
-            $this->setError($e->getMessage());
-            return false;
-        }
-
-    //    \PlanjeagendaHelper::addLogEntry("Registration status of record(s) ".implode(', ', $pks)." set to $value", __METHOD__, Log::DEBUG);
-        return true;
+    
+    
+public function setStatus(array $pks, int $value = 1): bool
+{
+    try {
+        
+        return $this->attendeeService
+        ->setStatus($pks, $value);
+        
+    } catch (\RuntimeException $e) {
+        
+        $this->setError($e->getMessage());
+        
+        return false;
     }
 }
+
+
+
+} // closing class

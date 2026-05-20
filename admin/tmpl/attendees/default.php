@@ -1,11 +1,13 @@
 <?php
 /**
- * @package    Planjeagenda
- * @copyright  (C) 2026 KoelmanLabs
+ * @package    KLEvents
+ * @copyright  (C) 2026 Koelman Labs
  * @copyright  (C) 2005-2009 Christoph Lukes
  * @license    https://www.gnu.org/licenses/gpl-3.0 GNU/GPL
  */
+
 defined('_JEXEC') or die;
+
 
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -84,6 +86,7 @@ $wa->addInlineScript('
                     <th class="title"><?php echo HTMLHelper::_('grid.sort', 'com_planjeagenda_NAME', 'u.name', $listDirn, $listOrder); ?></th>
                     <th class="title"><?php echo HTMLHelper::_('grid.sort', 'com_planjeagenda_USERNAME', 'u.username', $listDirn, $listOrder); ?></th>
                     <th class="title"><?php echo Text::_('com_planjeagenda_EMAIL'); ?></th>
+                    <th class="title"><?php echo Text::_('com_planjeagenda_IP_ADDRESS'); ?></th>
                     <th class="title"><?php echo HTMLHelper::_('grid.sort', 'com_planjeagenda_REGDATE', 'r.uregdate', $listDirn, $listOrder); ?></th>
                     <th class="title center"><?php echo HTMLHelper::_('grid.sort', 'com_planjeagenda_USER_ID', 'r.uid', $listDirn, $listOrder); ?></th>
                     <th class="title center"><?php echo HTMLHelper::_('grid.sort', 'com_planjeagenda_HEADER_WAITINGLIST_STATUS', 'r.waiting',$listDirn, $listOrder); ?></th>
@@ -107,6 +110,7 @@ $wa->addInlineScript('
                     <td><a href="<?php echo Route::_('index.php?option=com_planjeagenda&view=attendee&event='.$row->event . '&id='.$row->id);?>"><?php echo $this->escape($row->name); ?></a></td>
                     <td><?php echo $this->escape($row->username); ?></td>
                     <td class="email"><a href="mailto:<?php echo $this->escape($row->email); ?>"><?php echo $this->escape($row->email); ?></a></td>
+                    <td><?php echo $row->uip == 'DISABLED' ? Text::_('com_planjeagenda_DISABLED') : $row->uip; ?></td>
                     <td><?php if (!empty($row->uregdate)) { echo HTMLHelper::_('date', $row->uregdate, Text::_('DATE_FORMAT_LC2')); } ?></td>
                     <td class="center">
                     <a href="<?php echo Route::_('index.php?option=com_users&task=user.edit&id='.$row->uid); ?>"><?php echo $row->uid; ?></a>
