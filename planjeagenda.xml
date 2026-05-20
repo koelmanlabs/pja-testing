@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" method="upgrade">
+    <name>com_planjeagenda</name>
+    <author>KoelmanLabs</author>
+    <creationDate>2026</creationDate>
+    <copyright>Copyright (C) 2026 Koelman Labs. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <authorEmail>info@koelmanlabs.nl</authorEmail>
+    <authorUrl>https://koelmanlabs.nl</authorUrl>
+    <version>1.0.0</version>
+    <description>COM_PLANJEAGENDA_DESCRIPTION</description>
+
+    <!-- CRUCIAAL: Namespace strak op één regel zonder spaties of enters -->
+    <namespace path="src">KoelmanLabs\Component\Planjeagenda</namespace>
+
+    <targetplatform name="joomla" version="6.1"/>
+    <scriptfile>script.php</scriptfile>
+
+    <!-- SITE -->
+    <files folder="site">
+        <folder>src</folder>
+        <folder>services</folder>
+        <folder>tmpl</folder>
+        <folder>language</folder>
+        <filename>planjeagenda.php</filename>
+        <filename>router.php</filename>
+        <filename>index.html</filename>
+    </files>
+
+    <!-- ADMIN -->
+    <administration>
+        <menu link="option=com_planjeagenda">com_planjeagenda</menu>
+        <submenu>
+            <menu link="option=com_planjeagenda&amp;view=main">com_planjeagenda_MENU_MAINMENU</menu>
+            <menu link="option=com_planjeagenda&amp;view=events">com_planjeagenda_MENU_EVENTS</menu>
+            <menu link="option=com_planjeagenda&amp;view=venues">com_planjeagenda_MENU_VENUES</menu>
+            <menu link="option=com_planjeagenda&amp;view=categories">com_planjeagenda_MENU_CATEGORIES</menu>
+            <menu link="option=com_planjeagenda&amp;view=settings">com_planjeagenda_MENU_SETTINGS</menu>
+        </submenu>
+
+        <files folder="admin">
+            <folder>src</folder>
+            <folder>services</folder>
+            <folder>tmpl</folder>
+            <folder>forms</folder>
+            <folder>language</folder>
+            <folder>sql</folder>
+            <filename>planjeagenda.php</filename>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>index.html</filename>
+        </files>
+    </administration>
+
+    <!-- MEDIA -->
+    <media folder="media" destination="com_planjeagenda">
+        <folder>images</folder>
+        <folder>css</folder>
+        <folder>js</folder>
+    </media>
+
+    <!-- INSTALL -->
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+
+    <!-- UNINSTALL -->
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+
+    <!-- UPDATES -->
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+</extension>
